@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+
 import bs4
 import requests
 import ssl
+
+transcription_methods = {}
+transcription = lambda f: transcription_methods.setdefault(f.__name__, f)
 
 
 def get_english_ipa_list(word):
@@ -20,21 +24,30 @@ def get_english_ipa_list(word):
     return results
 
 
-def get_british_ipa(word):
+@transcription
+def british(word):
     ipa = get_english_ipa_list(word)
     result = ipa[0][3:].replace("//", "")
     return result
 
 
-def get_american_ipa(word):
+@transcription
+def american(word):
     ipa = get_english_ipa_list(word)
     result = ipa[1][4:].replace("//", "")
     return result
 
 
-def get_russian_ipa(word):
+@transcription
+def russian(word):
     link = 'https://ru.wiktionary.org/wiki/{}'.format(word)
     website = requests.get(link)
     soup = bs4.BeautifulSoup(website.text, "html.parser")
     results = soup.find_all('span', {'class': 'IPA'})
     return results[0].getText()
+
+
+def transcript(words, language):
+    transcription_method = transcription_methods[language]
+    transcribed_words = [transcription_method(word) for word in words]
+    return " ".join(transcribed_words)

@@ -6,6 +6,7 @@ from aqt.editor import Editor
 from aqt import mw
 
 import os
+import re
 
 from . import parse_ipa
 
@@ -14,11 +15,6 @@ ICONPATH = os.path.join(ADDONPATH, "icons", "button.png")
 CONFIG = mw.addonManager.getConfig(__name__)
 
 LANGUAGES_MAP = {'eng_b': 'british', 'eng_a': 'american', 'ru': 'russian'}
-LANGUAGE_FUNCTIONS = {
-    "american": parse_ipa.get_american_ipa,
-    "british": parse_ipa.get_british_ipa,
-    "russian": parse_ipa.get_russian_ipa
-}
 
 select_elm = ("""<select onchange='pycmd("shLang:" +"""
               """ this.selectedOptions[0].text)' """
@@ -28,36 +24,33 @@ select_elm = ("""<select onchange='pycmd("shLang:" +"""
 def paste_ipa(editor):
     lang_alias = editor.ipa_lang_alias
     note = editor.note
-    field = strip_word(note[CONFIG['WORD_FIELD']])
-    word_list = field.split()
-    new_word_list = []
+    # TODO
+    # field = strip_word(note[CONFIG['WORD_FIELD']])
+    input = note[CONFIG["WORD_FIELD"]]
+    words = re.findall(r"[\w']+", input)
 
-    for word in word_list:
-        if '-' in word:
-            new_word_list.extend(word.split("-"))
-        else:
-            new_word_list.append(word)
+    note[CONFIG["IPA_FIELD"]] = parse_ipa.transcript(words=words, language=lang_alias)
 
+    # TODO
+    # for idx, word in enumerate(new_word_list):
+    #     get_ipa = LANGUAGE_FUNCTIONS[lang_alias]
+    #     try:
+    #         get_ipa = LANGUAGE_FUNCTIONS[lang_alias]
+    #         if idx == 0 or len(new_word_list) == 1:
+    #             note[CONFIG['IPA_FIELD']] = get_ipa(word)
+    #         else:
+    #             note[CONFIG['IPA_FIELD']] += " " + get_ipa(word)
 
-    for idx, word in enumerate(new_word_list):
-        get_ipa = LANGUAGE_FUNCTIONS[lang_alias]
-        try:
-            get_ipa = LANGUAGE_FUNCTIONS[lang_alias]
-            if idx == 0 or len(new_word_list) == 1:
-                note[CONFIG['IPA_FIELD']] = get_ipa(word)
-            else:
-                note[CONFIG['IPA_FIELD']] += " " + get_ipa(word)
+    #     except KeyError:
+    #         showInfo("Field '{}' or Field '{}' doesn't exist.".format(
+    #             CONFIG['WORD_FIELD'], CONFIG['IPA_FIELD'])
+    #         )
+    #     except:
+    #         showInfo("IPA not found.")
 
-        except KeyError:
-            showInfo("Field '{}' or Field '{}' doesn't exist.".format(
-                CONFIG['WORD_FIELD'], CONFIG['IPA_FIELD'])
-            )
-        except:
-            showInfo("IPA not found.")
-
-        editor.loadNote()
-        editor.web.setFocus()
-        editor.web.eval("focusField(%d);" % editor.currentField)
+    editor.loadNote()
+    editor.web.setFocus()
+    editor.web.eval("focusField(%d);" % editor.currentField)
 
 
 def strip_word(word):
