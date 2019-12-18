@@ -22,12 +22,14 @@ def get_english_ipa_list(word):
 
 def get_british_ipa(word):
     ipa = get_english_ipa_list(word)
-    return ipa[0][3:]
+    result = ipa[0][3:].replace("//", "")
+    return result
 
 
 def get_american_ipa(word):
     ipa = get_english_ipa_list(word)
-    return ipa[1][4:]
+    result = ipa[1][4:].replace("//", "")
+    return result
 
 
 def get_russian_ipa(word):
