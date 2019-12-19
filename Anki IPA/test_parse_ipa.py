@@ -8,16 +8,16 @@ class TestParseIpa(unittest.TestCase):
 
     # TODO test special cases
 
-    def test_get_british_ipa(self):
-        self.assertEqual(parse_ipa.get_british_ipa("go"), "ɡəʊ")
-        self.assertEqual(parse_ipa.get_british_ipa("box"), "bɒks")
+    def test_british(self):
+        self.assertEqual(parse_ipa.british("go"), "ɡəʊ")
+        self.assertEqual(parse_ipa.british("box"), "bɒks")
 
-    def test_get_american_ipa(self):
-        self.assertEqual(parse_ipa.get_american_ipa("go"), "ɡoʊ")
-        self.assertEqual(parse_ipa.get_american_ipa("box"), "bɑːks")
+    def test_american(self):
+        self.assertEqual(parse_ipa.american("go"), "ɡoʊ")
+        self.assertEqual(parse_ipa.american("box"), "bɑːks")
 
-    def test_get_russian_ipa(self):
-        self.assertEqual(parse_ipa.get_russian_ipa("спасибо"), "spɐˈsʲibə")
+    def test_russian(self):
+        self.assertEqual(parse_ipa.russian("спасибо"), "spɐˈsʲibə")
 
 
 if __name__ == "__main__":

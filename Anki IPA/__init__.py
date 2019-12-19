@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import urllib
 
 from anki.hooks import addHook, wrap
 from aqt.utils import showInfo
@@ -24,41 +25,35 @@ select_elm = ("""<select onchange='pycmd("shLang:" +"""
 def paste_ipa(editor):
     lang_alias = editor.ipa_lang_alias
     note = editor.note
-    # TODO
-    # field = strip_word(note[CONFIG['WORD_FIELD']])
-    input = note[CONFIG["WORD_FIELD"]]
-    words = re.findall(r"[\w']+", input)
 
-    note[CONFIG["IPA_FIELD"]] = parse_ipa.transcript(words=words, language=lang_alias)
+    try:
+        input = note[CONFIG["WORD_FIELD"]]
+    except KeyError:
+        showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
+        return
 
-    # TODO
-    # for idx, word in enumerate(new_word_list):
-    #     get_ipa = LANGUAGE_FUNCTIONS[lang_alias]
-    #     try:
-    #         get_ipa = LANGUAGE_FUNCTIONS[lang_alias]
-    #         if idx == 0 or len(new_word_list) == 1:
-    #             note[CONFIG['IPA_FIELD']] = get_ipa(word)
-    #         else:
-    #             note[CONFIG['IPA_FIELD']] += " " + get_ipa(word)
+    words = strip_list(re.findall(r"[\w']+", input))
 
-    #     except KeyError:
-    #         showInfo("Field '{}' or Field '{}' doesn't exist.".format(
-    #             CONFIG['WORD_FIELD'], CONFIG['IPA_FIELD'])
-    #         )
-    #     except:
-    #         showInfo("IPA not found.")
+    try:
+        ipa = parse_ipa.transcript(words=words, language=lang_alias)
+    except urllib.error.HTTPError:
+        showInfo("IPA not found.")
+        return
+
+    try:
+        note[CONFIG["IPA_FIELD"]] = ipa
+    except KeyError:
+        showInfo(f"Field '{CONFIG['IPA_FIELD']}' doesn't exist.")
+        return
 
     editor.loadNote()
     editor.web.setFocus()
     editor.web.eval("focusField(%d);" % editor.currentField)
 
 
-def strip_word(word):
-    codes = ["&nbsp", ";", "<i>", "</i>", "<b>", "</b>", "<u>", "</u>"]
-    for code in codes:
-        word = word.replace(code, "")
-    word = word.strip()
-    return word.lower()
+def strip_list(list_):
+    codes = ["nbsp", "i", "b", "u"]
+    return [element.lower() for element in list_ if element not in codes]
 
 
 def get_deck_name(mw):
