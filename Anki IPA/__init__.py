@@ -15,7 +15,12 @@ ADDONPATH = os.path.dirname(__file__)
 ICONPATH = os.path.join(ADDONPATH, "icons", "button.png")
 CONFIG = mw.addonManager.getConfig(__name__)
 
-LANGUAGES_MAP = {'eng_b': 'british', 'eng_a': 'american', 'ru': 'russian'}
+LANGUAGES_MAP = {
+    'eng_b': 'british',
+    'eng_a': 'american',
+    'ru': 'russian',
+    'fr': 'french'
+}
 
 select_elm = ("""<select onchange='pycmd("shLang:" +"""
               """ this.selectedOptions[0].text)' """

@@ -46,6 +46,14 @@ def russian(word):
     results = soup.find_all('span', {'class': 'IPA'})
     return results[0].getText()
 
+@transcription
+def french(word):
+    link = 'https://fr.wiktionary.org/wiki/{}'.format(word)
+    website = requests.get(link)
+    soup = bs4.BeautifulSoup(website.text, "html.parser")
+    results = soup.find_all('span', {'title': 'prononciation API'})
+    return results[0].getText().replace("\\", "")
+
 
 def transcript(words, language):
     transcription_method = transcription_methods[language]
