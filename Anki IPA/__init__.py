@@ -40,6 +40,9 @@ def paste_ipa(editor):
         showInfo("IPA not found.")
         return
 
+    # workaround for cursive on Mac OS
+    ipa.replace("ɪm", "")
+
     try:
         note[CONFIG["IPA_FIELD"]] = ipa
     except KeyError:
