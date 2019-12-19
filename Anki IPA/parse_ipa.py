@@ -40,7 +40,7 @@ def american(word):
 
 @transcription
 def russian(word):
-    link = 'https://ru.wiktionary.org/wiki/{}'.format(word)
+    link = f"https://ru.wiktionary.org/wiki/{word}"
     website = requests.get(link)
     soup = bs4.BeautifulSoup(website.text, "html.parser")
     results = soup.find_all('span', {'class': 'IPA'})
@@ -48,11 +48,20 @@ def russian(word):
 
 @transcription
 def french(word):
-    link = 'https://fr.wiktionary.org/wiki/{}'.format(word)
+    link = f"https://fr.wiktionary.org/wiki/{word}"
     website = requests.get(link)
     soup = bs4.BeautifulSoup(website.text, "html.parser")
     results = soup.find_all('span', {'title': 'prononciation API'})
     return results[0].getText().replace("\\", "")
+
+
+@transcription
+def spanish(word):
+    link = f"https://es.wiktionary.org/wiki/{word}"
+    website = requests.get(link)
+    soup = bs4.BeautifulSoup(website.text, "html.parser")
+    results = soup.find_all('span', {'style': 'color:#368BC1'})
+    return results[0].getText()
 
 
 def transcript(words, language):

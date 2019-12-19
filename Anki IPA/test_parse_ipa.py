@@ -6,8 +6,6 @@ import parse_ipa
 
 class TestParseIpa(unittest.TestCase):
 
-    # TODO test special cases
-
     def test_british(self):
         self.assertEqual(parse_ipa.british("go"), "ɡəʊ")
         self.assertEqual(parse_ipa.british("box"), "bɒks")
@@ -22,6 +20,9 @@ class TestParseIpa(unittest.TestCase):
     def test_french(self):
         self.assertEqual(parse_ipa.french("occasion"), "ɔ.ka.zjɔ̃")
         self.assertEqual(parse_ipa.french("rencontre"), "ʁɑ̃.kɔ̃tʁ")
+
+    def test_spanish(self):
+        self.assertEqual(parse_ipa.spanish("eternidad"), "e.teɾ.niˈðað")
 
 
 if __name__ == "__main__":
