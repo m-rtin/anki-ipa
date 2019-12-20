@@ -20,7 +20,8 @@ LANGUAGES_MAP = {
     'eng_a': 'american',
     'ru': 'russian',
     'fr': 'french',
-    'es': 'spanish'
+    'es': 'spanish',
+    'ger': 'german'
 }
 
 select_elm = ("""<select onchange='pycmd("shLang:" +"""
@@ -42,7 +43,7 @@ def paste_ipa(editor):
 
     try:
         ipa = parse_ipa.transcript(words=words, language=lang_alias)
-    except urllib.error.HTTPError:
+    except (urllib.error.HTTPError, IndexError):
         showInfo("IPA not found.")
         return
 
@@ -62,7 +63,7 @@ def paste_ipa(editor):
 
 def strip_list(list_):
     codes = ["nbsp", "i", "b", "u"]
-    return [element.lower() for element in list_ if element not in codes]
+    return [element for element in list_ if element not in codes]
 
 
 def get_deck_name(mw):

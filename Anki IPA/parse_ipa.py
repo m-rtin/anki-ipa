@@ -41,27 +41,36 @@ def american(word):
 @transcription
 def russian(word):
     link = f"https://ru.wiktionary.org/wiki/{word}"
-    website = requests.get(link)
-    soup = bs4.BeautifulSoup(website.text, "html.parser")
-    results = soup.find_all('span', {'class': 'IPA'})
+    results = parse_wiktionary(link, {'class': 'IPA'})
     return results[0].getText()
+
 
 @transcription
 def french(word):
     link = f"https://fr.wiktionary.org/wiki/{word}"
-    website = requests.get(link)
-    soup = bs4.BeautifulSoup(website.text, "html.parser")
-    results = soup.find_all('span', {'title': 'prononciation API'})
+    results = parse_wiktionary(link, {'title': 'prononciation API'})
     return results[0].getText().replace("\\", "")
 
 
 @transcription
 def spanish(word):
     link = f"https://es.wiktionary.org/wiki/{word}"
+    results = parse_wiktionary(link, {'style': 'color:#368BC1'})
+    return results[0].getText()
+
+
+@transcription
+def german(word):
+    link = f"https://de.wiktionary.org/wiki/{word}"
+    results = parse_wiktionary(link, {'class': 'ipa'})
+    return results[0].getText()
+
+
+def parse_wiktionary(link, css_code):
     website = requests.get(link)
     soup = bs4.BeautifulSoup(website.text, "html.parser")
-    results = soup.find_all('span', {'style': 'color:#368BC1'})
-    return results[0].getText()
+    results = soup.find_all('span', css_code)
+    return results
 
 
 def transcript(words, language):
