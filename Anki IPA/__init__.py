@@ -21,7 +21,8 @@ LANGUAGES_MAP = {
     'ru': 'russian',
     'fr': 'french',
     'es': 'spanish',
-    'ger': 'german'
+    'ger': 'german',
+    'pl': 'polish'
 }
 
 select_elm = ("""<select onchange='pycmd("shLang:" +"""

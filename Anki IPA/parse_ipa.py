@@ -66,6 +66,14 @@ def german(word):
     return results[0].getText()
 
 
+@transcription
+def polish(word):
+    link = f"https://pl.wiktionary.org/wiki/{word}"
+    results = parse_wiktionary(
+        link, {'title': 'To jest wymowa w zapisie IPA; zobacz hasło IPA w Wikipedii'})
+    return results[0].getText().replace("[", "").replace("]", "")
+
+
 def parse_wiktionary(link, css_code):
     website = requests.get(link)
     soup = bs4.BeautifulSoup(website.text, "html.parser")
