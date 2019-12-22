@@ -27,6 +27,10 @@ class TestParseIpa(unittest.TestCase):
     def test_german(self):
         self.assertEqual(parse_ipa.german("Land"), "lant")
 
+    def test_polish(self):
+        self.assertEqual(parse_ipa.polish("asteroida"), "ˌastɛˈrɔjda")
+        self.assertEqual(parse_ipa.polish("mały"), "ˈmawɨ")
+
 
 if __name__ == "__main__":
     unittest.main()
