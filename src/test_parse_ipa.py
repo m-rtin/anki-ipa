@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+This file is part of the Anki IPA add-on for Anki.
+Test parsing methods
+Copyright: (c) 2019 m-rtin <https://github.com/m-rtin>
+License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
+"""
+
 import unittest
 import parse_ipa
 
