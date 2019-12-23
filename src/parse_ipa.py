@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import urllib
+"""
+This file is part of the Anki IPA add-on for Anki.
+Parsing methods
+Copyright: (c) 2019 m-rtin <https://github.com/m-rtin>
+License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
+"""
 
+import urllib
 import bs4
 import requests
 import ssl
 
+# Create a dictionary for all transcription methods
 transcription_methods = {}
 transcription = lambda f: transcription_methods.setdefault(f.__name__, f)
 
