@@ -17,20 +17,12 @@ from aqt.editor import Editor
 from aqt import mw
 
 from . import parse_ipa
+from . import batch_editing
+from . import consts
 
 ADDON_PATH = os.path.dirname(__file__)
 ICON_PATH = os.path.join(ADDON_PATH, "icons", "button.png")
 CONFIG = mw.addonManager.getConfig(__name__)
-
-LANGUAGES_MAP = {
-    'eng_b': 'british',
-    'eng_a': 'american',
-    'ru': 'russian',
-    'fr': 'french',
-    'es': 'spanish',
-    'ger': 'german',
-    'pl': 'polish'
-}
 
 select_elm = ("""<select onchange='pycmd("IPALang:" +"""
               """ this.selectedOptions[0].text)' """
@@ -128,7 +120,7 @@ def on_setup_buttons(buttons: List[str], editor: Editor) -> List[str]:
 
     options += [
         f"""<option>{language}</option>"""
-        for language in sorted(LANGUAGES_MAP.keys(), key=str.lower)
+        for language in sorted(consts.LANGUAGES_MAP.keys(), key=str.lower)
         if language != previous_lang
     ]
 
@@ -158,7 +150,7 @@ def on_ipa_language_select(editor: Editor, lang: str) -> None:
     :param editor: Anki editor window
     :param lang: name of selected language
     """
-    alias = LANGUAGES_MAP[lang]
+    alias = consts.LANGUAGES_MAP[lang]
     set_default_lang(mw, lang)
     editor.ipa_lang_alias = alias
 
@@ -169,7 +161,7 @@ def init_ipa(editor: Editor, *args, **kwargs) -> None:
     :param editor: Anki editor window
     """
     previous_lang = get_default_lang(mw)
-    editor.ipa_lang_alias = LANGUAGES_MAP.get(previous_lang, "")
+    editor.ipa_lang_alias = consts.LANGUAGES_MAP.get(previous_lang, "")
 
 
 def on_bridge_cmd(editor: Editor, command: str, _old: Callable) -> None:
@@ -192,3 +184,6 @@ def on_bridge_cmd(editor: Editor, command: str, _old: Callable) -> None:
 addHook("setupEditorButtons", on_setup_buttons)
 Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, on_bridge_cmd, "around")
 Editor.__init__ = wrap(Editor.__init__, init_ipa)
+
+# Batch editing
+addHook("browser.setupMenus", batch_editing.setup_menu)
