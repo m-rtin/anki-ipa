@@ -1,25 +1,38 @@
+# -*- coding: utf-8 -*-
+
+"""
+This file is part of the Anki IPA add-on for Anki.
+Add IPA transcription in Anki browser.
+Copyright: (c) 2019 m-rtin <https://github.com/m-rtin>
+License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
+"""
+
 from aqt.browser import Browser
 from aqt.utils import tooltip
 import aqt.qt as qt
 
 from .typing import List, Callable
 from . import consts
+from . import parse_ipa
+from . import main
 
 
-class BatchEditDialog(qt.QDialog):
-    """Browser batch editing dialog"""
+class AddIpaTranscriptDialog(qt.QDialog):
+    """QDialog to add IPA transcription to multiple notes in Anki browser."""
 
     def __init__(self, browser: Browser, selected_notes: List[int]) -> None:
+        """Initialize AddIpaTranscriptDialog."""
         qt.QDialog.__init__(self, parent=browser)
         self.browser = browser
-        self.nids = selected_notes
+        self.selected_notes = selected_notes
         self._setupUi()
 
-    def _setupUi(self):
+    def _setupUi(self) -> None:
+        """Create user interface."""
         # Language combobox
         lang_label = qt.QLabel("Language:")
         self.lang_combobox = qt.QComboBox()
-        self.lang_combobox.addItems(consts.LANGUAGES_MAP.keys())
+        self.lang_combobox.addItems(consts.LANGUAGES_MAP.values())
         lang_hbox = qt.QHBoxLayout()
         lang_hbox.addWidget(lang_label)
         lang_hbox.addWidget(self.lang_combobox)
@@ -67,32 +80,50 @@ class BatchEditDialog(qt.QDialog):
         self.setMinimumHeight(400)
         self.setWindowTitle("Add IPA")
 
-    def _getFields(self):
-        nid = self.nids[0]
+    def _getFields(self) -> None:
+        """Get all fields of selected notes."""
+        selected_note = self.selected_notes[0]
         mw = self.browser.mw
-        model = mw.col.getNote(nid).model()
+        model = mw.col.getNote(selected_note).model()
         fields = mw.col.models.fieldNames(model)
         return fields
 
-    def on_confirm(self):
-        # batchEditNotes(self.browser, self.nids)
+    def on_confirm(self) -> None:
+        """Call batch_edit_notes if button is clicked."""
+        batch_edit_notes(
+            self.browser,
+            self.selected_notes,
+            self.lang_combobox.currentText(),
+            self.base_combobox.currentText(),
+            self.field_combobox.currentText()
+        )
         self.close()
 
 
-def batch_edit_notes(browser: Browser, selected_notes: List[int]) -> None:
-    # TODO
+def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, base_field: str,
+                     target_field: str) -> None:
+    """ Add IPA transcription to all selected notes.
+
+    :param browser:  Anki browser
+    :param selected_notes: selected notes in browser to which we want to add IPA transcription
+    :param lang: language for the IPA transcription
+    :param base_field: name of the base field for IPA transcription
+    :param target_field: name of the target field for IPA transcription
+    """
     mw = browser.mw
     mw.checkpoint("batch edit")
     mw.progress.start()
     browser.model.beginReset()
 
-    for note in selected_notes:
-        note = mw.col.getNote(note)
-        if fld in note:
-            content = note[fld]
-            if content.endswith(breaks):
-                spacer = ""
-            note[fld] += spacer + html
+    for selected_note in selected_notes:
+        note = mw.col.getNote(selected_note)
+        if base_field in note and target_field in note:
+            words = main.get_words_from_field(field_text=note[base_field])
+            try:
+                note[target_field] = parse_ipa.transcript(words=words, language=lang)
+            # IPA transcription not found
+            except IndexError:
+                continue
             note.flush()
 
     browser.model.endReset()
@@ -102,11 +133,15 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int]) -> None:
 
 
 def on_batch_edit(browser: Browser) -> None:
+    """ Open BatchEditDialog when menu entry is clicked.
+
+    :param browser: Anki browser
+    """
     selected_notes = browser.selectedNotes()
     if not selected_notes:
         tooltip("No cards selected.")
         return
-    dialog = BatchEditDialog(browser, selected_notes)
+    dialog = AddIpaTranscriptDialog(browser, selected_notes)
     dialog.exec_()
 
 

@@ -11,6 +11,7 @@ import urllib
 import bs4
 import requests
 import ssl
+from .typing import List
 
 # Create a dictionary for all transcription methods
 transcription_methods = {}
@@ -88,7 +89,7 @@ def parse_wiktionary(link, css_code):
     return results
 
 
-def transcript(words, language):
+def transcript(words: List[str], language: str) -> str:
     transcription_method = transcription_methods[language]
     transcribed_words = [transcription_method(word) for word in words]
     return " ".join(transcribed_words)

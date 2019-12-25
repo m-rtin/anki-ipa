@@ -9,6 +9,8 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 
 import os
 import re
+import urllib
+
 from .typing import List, Callable
 
 from anki.hooks import addHook, wrap
@@ -38,12 +40,12 @@ def paste_ipa(editor: Editor) -> None:
     note = editor.note
 
     try:
-        input = note[CONFIG["WORD_FIELD"]]
+        field_text = note[CONFIG["WORD_FIELD"]]
     except KeyError:
         showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
         return
 
-    words = strip_list(re.findall(r"[\w']+", input))
+    words = get_words_from_field(field_text)
 
     try:
         ipa = parse_ipa.transcript(words=words, language=lang_alias)
@@ -63,6 +65,11 @@ def paste_ipa(editor: Editor) -> None:
     editor.loadNote()
     editor.web.setFocus()
     editor.web.eval("focusField(%d);" % editor.currentField)
+
+
+def get_words_from_field(field_text: str) -> List[str]:
+    words = strip_list(re.findall(r"[\w']+", field_text))
+    return words
 
 
 def strip_list(list_: List[str]) -> List[str]:
