@@ -20,6 +20,8 @@ from . import main
 class AddIpaTranscriptDialog(qt.QDialog):
     """QDialog to add IPA transcription to multiple notes in Anki browser."""
 
+    progress_changed = qt.pyqtSignal(int)
+
     def __init__(self, browser: Browser, selected_notes: List[int]) -> None:
         """Initialize AddIpaTranscriptDialog."""
         qt.QDialog.__init__(self, parent=browser)
@@ -28,6 +30,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self._setup_comboboxes()
         self._setup_form()
         self._setup_buttons()
+        self._setup_progressbar()
         self._setup_main()
 
     def _setup_comboboxes(self) -> None:
@@ -36,10 +39,8 @@ class AddIpaTranscriptDialog(qt.QDialog):
 
         self.lang_combobox = qt.QComboBox()
         self.lang_combobox.addItems(consts.LANGUAGES_MAP.values())
-
         self.base_combobox = qt.QComboBox()
         self.base_combobox.addItems(fields)
-
         self.field_combobox = qt.QComboBox()
         self.field_combobox.addItems(fields)
 
@@ -53,6 +54,10 @@ class AddIpaTranscriptDialog(qt.QDialog):
         form_layout.addRow(qt.QLabel("Field of IPA transcription:"), self.field_combobox)
 
         self.form_group_box.setLayout(form_layout)
+
+    def _setup_progressbar(self) -> None:
+        self.progress = qt.QProgressBar(self)
+        self.progress_changed.connect(self.on_progress_changed)
 
     def _setup_buttons(self) -> None:
         """Setup add button."""
@@ -68,6 +73,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         """Setup diag window."""
         main_layout = qt.QVBoxLayout()
         main_layout.addWidget(self.form_group_box)
+        main_layout.addWidget(self.progress)
         main_layout.addLayout(self.bottom_hbox)
         self.setLayout(main_layout)
         self.setWindowTitle("Add IPA transcriptions")
@@ -80,6 +86,14 @@ class AddIpaTranscriptDialog(qt.QDialog):
         fields = mw.col.models.fieldNames(model)
         return fields
 
+    @qt.pyqtSlot(int)
+    def on_progress_changed(self, value) -> None:
+        """ Update progress bar value.
+
+        :param value: new progressbar value
+        """
+        self.progress.setValue(value)
+
     def on_confirm(self) -> None:
         """Call batch_edit_notes if button is clicked."""
         question = f"This will overwrite the current content of the IPA transcription field. Proceed?"
@@ -90,13 +104,14 @@ class AddIpaTranscriptDialog(qt.QDialog):
             self.selected_notes,
             self.lang_combobox.currentText(),
             self.base_combobox.currentText(),
-            self.field_combobox.currentText()
+            self.field_combobox.currentText(),
+            self.progress_changed
         )
         self.close()
 
 
 def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, base_field: str,
-                     target_field: str) -> None:
+                     target_field: str, progress: qt.pyqtBoundSignal) -> None:
     """ Add IPA transcription to all selected notes.
 
     :param browser:  Anki browser
@@ -104,13 +119,15 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, bas
     :param lang: language for the IPA transcription
     :param base_field: name of the base field for IPA transcription
     :param target_field: name of the target field for IPA transcription
+    :param progress: progressbar signal
     """
+    print(type(progress))
     mw = browser.mw
     mw.checkpoint("batch edit")
     mw.progress.start()
     browser.model.beginReset()
 
-    for selected_note in selected_notes:
+    for index, selected_note in enumerate(selected_notes):
         note = mw.col.getNote(selected_note)
         if base_field in note and target_field in note:
             words = main.get_words_from_field(field_text=note[base_field])
@@ -119,6 +136,8 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, bas
             # IPA transcription not found
             except IndexError:
                 continue
+
+            progress.emit(index)
             note.flush()
 
     browser.model.endReset()
