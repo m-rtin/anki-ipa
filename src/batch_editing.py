@@ -8,7 +8,7 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
 
 from aqt.browser import Browser
-from aqt.utils import tooltip
+from aqt.utils import tooltip, askUser
 import aqt.qt as qt
 
 from .typing import List
@@ -82,6 +82,9 @@ class AddIpaTranscriptDialog(qt.QDialog):
 
     def on_confirm(self) -> None:
         """Call batch_edit_notes if button is clicked."""
+        question = f"This will overwrite the current content of the IPA transcription field. Proceed?"
+        if not askUser(question, parent=self):
+            return
         batch_edit_notes(
             self.browser,
             self.selected_notes,
