@@ -11,7 +11,7 @@ from aqt.browser import Browser
 from aqt.utils import tooltip
 import aqt.qt as qt
 
-from .typing import List, Callable
+from .typing import List
 from . import consts
 from . import parse_ipa
 from . import main
@@ -25,62 +25,54 @@ class AddIpaTranscriptDialog(qt.QDialog):
         qt.QDialog.__init__(self, parent=browser)
         self.browser = browser
         self.selected_notes = selected_notes
-        self._setupUi()
+        self._setup_comboboxes()
+        self._setup_form()
+        self._setup_buttons()
+        self._setup_main()
 
-    def _setupUi(self) -> None:
-        """Create user interface."""
-        # Language combobox
-        lang_label = qt.QLabel("Language:")
+    def _setup_comboboxes(self) -> None:
+        """Setup comboboxes for language, base field and target field."""
+        fields = self._get_fields()
+
         self.lang_combobox = qt.QComboBox()
         self.lang_combobox.addItems(consts.LANGUAGES_MAP.values())
-        lang_hbox = qt.QHBoxLayout()
-        lang_hbox.addWidget(lang_label)
-        lang_hbox.addWidget(self.lang_combobox)
-        lang_hbox.setAlignment(qt.Qt.AlignLeft)
 
-        # Available fields
-        fields = self._getFields()
-
-        # Base field
-        base_label = qt.QLabel("Put IPA transcription of this field:")
         self.base_combobox = qt.QComboBox()
         self.base_combobox.addItems(fields)
-        base_hbox = qt.QHBoxLayout()
-        base_hbox.addWidget(base_label)
-        base_hbox.addWidget(self.base_combobox)
-        base_hbox.setAlignment(qt.Qt.AlignLeft)
 
-        # Target field combobox
-        field_label = qt.QLabel("Into this field:")
         self.field_combobox = qt.QComboBox()
         self.field_combobox.addItems(fields)
-        field_hbox = qt.QHBoxLayout()
-        field_hbox.addWidget(field_label)
-        field_hbox.addWidget(self.field_combobox)
-        field_hbox.setAlignment(qt.Qt.AlignLeft)
 
-        # Buttons
+    def _setup_form(self) -> None:
+        """Setup form for user interaction."""
+        self.form_group_box = qt.QGroupBox("Options")
+
+        form_layout = qt.QFormLayout()
+        form_layout.addRow(qt.QLabel("Language:"), self.lang_combobox)
+        form_layout.addRow(qt.QLabel("Field of word:"), self.base_combobox)
+        form_layout.addRow(qt.QLabel("Field of IPA transcription:"), self.field_combobox)
+
+        self.form_group_box.setLayout(form_layout)
+
+    def _setup_buttons(self) -> None:
+        """Setup add button."""
         button_box = qt.QDialogButtonBox(qt.Qt.Horizontal, self)
-        adda_btn = button_box.addButton("Add &after", qt.QDialogButtonBox.ActionRole)
-        adda_btn.setToolTip("Add after existing field contents")
-        bottom_hbox = qt.QHBoxLayout()
-        bottom_hbox.addWidget(button_box)
+        add_button = button_box.addButton("Add", qt.QDialogButtonBox.ActionRole)
 
-        # Connect button
-        adda_btn.clicked.connect(self.on_confirm)
+        self.bottom_hbox = qt.QHBoxLayout()
+        self.bottom_hbox.addWidget(button_box)
 
-        # Main window
-        vbox_main = qt.QVBoxLayout()
-        vbox_main.addLayout(lang_hbox)
-        vbox_main.addLayout(base_hbox)
-        vbox_main.addLayout(field_hbox)
-        vbox_main.addLayout(bottom_hbox)
-        self.setLayout(vbox_main)
-        self.setMinimumWidth(540)
-        self.setMinimumHeight(400)
-        self.setWindowTitle("Add IPA")
+        add_button.clicked.connect(self.on_confirm)
 
-    def _getFields(self) -> None:
+    def _setup_main(self) -> None:
+        """Setup diag window."""
+        main_layout = qt.QVBoxLayout()
+        main_layout.addWidget(self.form_group_box)
+        main_layout.addLayout(self.bottom_hbox)
+        self.setLayout(main_layout)
+        self.setWindowTitle("Add IPA transcriptions")
+
+    def _get_fields(self) -> None:
         """Get all fields of selected notes."""
         selected_note = self.selected_notes[0]
         mw = self.browser.mw
