@@ -14,8 +14,7 @@ import aqt.qt as qt
 
 from .typing import List
 from . import consts
-from . import parse_ipa
-from . import main
+from . import parse_ipa_transcription
 from . import misc
 
 
@@ -137,7 +136,7 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, bas
         if base_field in note and target_field in note:
             words = misc.get_words_from_field(field_text=note[base_field])
             try:
-                note[target_field] = parse_ipa.transcript(words=words, language=lang)
+                note[target_field] = parse_ipa_transcription.transcript(words=words, language=lang)
             # IPA transcription not found
             except (urllib.error.HTTPError, IndexError):
                 progress.emit(index)

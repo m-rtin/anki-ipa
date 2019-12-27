@@ -11,7 +11,7 @@ import urllib
 import bs4
 import requests
 import ssl
-from .typing import List
+from src.typing import List
 
 # Create a dictionary for all transcription methods
 transcription_methods = {}

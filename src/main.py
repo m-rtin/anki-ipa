@@ -17,8 +17,8 @@ from aqt.utils import showInfo
 from aqt.editor import Editor
 from aqt import mw
 
-from . import parse_ipa
-from . import batch_editing
+from . import parse_ipa_transcription
+from . import batch_adding
 from . import consts
 from . import misc
 
@@ -48,7 +48,7 @@ def paste_ipa(editor: Editor) -> None:
     words = misc.get_words_from_field(field_text)
 
     try:
-        ipa = parse_ipa.transcript(words=words, language=lang_alias)
+        ipa = parse_ipa_transcription.transcript(words=words, language=lang_alias)
     except (urllib.error.HTTPError, IndexError):
         showInfo("IPA not found.")
         return
@@ -178,4 +178,4 @@ Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, on_bridge_cmd, "around")
 Editor.__init__ = wrap(Editor.__init__, init_ipa)
 
 # Batch editing
-addHook("browser.setupMenus", batch_editing.setup_menu)
+addHook("browser.setupMenus", batch_adding.setup_menu)

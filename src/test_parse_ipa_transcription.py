@@ -8,7 +8,7 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
 
 import unittest
-import parse_ipa
+import parse_ipa_transcription as parse_ipa
 
 
 class TestParseIpa(unittest.TestCase):
