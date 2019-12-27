@@ -16,6 +16,7 @@ from .typing import List
 from . import consts
 from . import parse_ipa
 from . import main
+from . import misc
 
 
 class AddIpaTranscriptDialog(qt.QDialog):
@@ -134,7 +135,7 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, bas
     for index, selected_note in enumerate(selected_notes):
         note = mw.col.getNote(selected_note)
         if base_field in note and target_field in note:
-            words = main.get_words_from_field(field_text=note[base_field])
+            words = misc.get_words_from_field(field_text=note[base_field])
             try:
                 note[target_field] = parse_ipa.transcript(words=words, language=lang)
             # IPA transcription not found

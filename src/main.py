@@ -8,7 +8,6 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
 
 import os
-import re
 import urllib
 
 from .typing import List, Callable
@@ -21,6 +20,7 @@ from aqt import mw
 from . import parse_ipa
 from . import batch_editing
 from . import consts
+from . import misc
 
 ADDON_PATH = os.path.dirname(__file__)
 ICON_PATH = os.path.join(ADDON_PATH, "icons", "button.png")
@@ -45,7 +45,7 @@ def paste_ipa(editor: Editor) -> None:
         showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
         return
 
-    words = get_words_from_field(field_text)
+    words = misc.get_words_from_field(field_text)
 
     try:
         ipa = parse_ipa.transcript(words=words, language=lang_alias)
@@ -65,21 +65,6 @@ def paste_ipa(editor: Editor) -> None:
     editor.loadNote()
     editor.web.setFocus()
     editor.web.eval("focusField(%d);" % editor.currentField)
-
-
-def get_words_from_field(field_text: str) -> List[str]:
-    words = strip_list(re.findall(r"[\w']+", field_text))
-    return words
-
-
-def strip_list(list_: List[str]) -> List[str]:
-    """ Removes HTML code from list elements.
-
-    :param list_: list of IPA transcriptions
-    :return: cleaned list (no HTML code)
-    """
-    codes = ["nbsp", "i", "b", "u", "div", "br"]
-    return [element for element in list_ if element not in codes]
 
 
 def get_deck_name(main_window: mw) -> str:
