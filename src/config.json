@@ -1,7 +1,4 @@
 {
     "WORD_FIELD": "Wort",
-    "IPA_FIELD": "IPA",
-    "defaultlangperdeck": 1,  
-    "deckdefaultlang": {},  
-    "lang": "eng_a"
+    "IPA_FIELD": "IPA"
 }

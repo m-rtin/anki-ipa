@@ -16,3 +16,4 @@ LANGUAGES_MAP = {
     'ger': 'german',
     'pl': 'polish'
 }
+

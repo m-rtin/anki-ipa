@@ -36,6 +36,8 @@ def paste_ipa(editor: Editor) -> None:
 
     :param editor: Anki editor window
     """
+
+    addon_conf = mw.col.conf['anki_ipa_conf']
     lang_alias = editor.ipa_lang_alias
     note = editor.note
 
