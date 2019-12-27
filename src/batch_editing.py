@@ -6,7 +6,6 @@ Add IPA transcription in Anki browser.
 Copyright: (c) 2019 m-rtin <https://github.com/m-rtin>
 License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
-import threading
 import urllib
 
 from aqt.browser import Browser
@@ -58,6 +57,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.form_group_box.setLayout(form_layout)
 
     def _setup_progressbar(self) -> None:
+        """Setup progressbar which indicates how many IPA transcriptions already have been added."""
         self.progress = qt.QProgressBar(self)
         self.progress.setMinimum(0)
         self.progress.setMaximum(len(self.selected_notes))
@@ -67,13 +67,11 @@ class AddIpaTranscriptDialog(qt.QDialog):
         """Setup add button."""
         button_box = qt.QDialogButtonBox(qt.Qt.Horizontal, self)
         add_button = button_box.addButton("Add", qt.QDialogButtonBox.ActionRole)
-        close_button = button_box.addButton("Cancel", qt.QDialogButtonBox.RejectRole)
 
         self.bottom_hbox = qt.QHBoxLayout()
         self.bottom_hbox.addWidget(button_box)
 
         add_button.clicked.connect(self.on_confirm)
-        close_button.clicked.connect(self.close)
 
     def _setup_main(self) -> None:
         """Setup diag window."""
