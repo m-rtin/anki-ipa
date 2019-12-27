@@ -78,7 +78,7 @@ def strip_list(list_: List[str]) -> List[str]:
     :param list_: list of IPA transcriptions
     :return: cleaned list (no HTML code)
     """
-    codes = ["nbsp", "i", "b", "u"]
+    codes = ["nbsp", "i", "b", "u", "div", "br"]
     return [element for element in list_ if element not in codes]
 
 

@@ -6,6 +6,8 @@ Add IPA transcription in Anki browser.
 Copyright: (c) 2019 m-rtin <https://github.com/m-rtin>
 License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
+import threading
+import urllib
 
 from aqt.browser import Browser
 from aqt.utils import tooltip, askUser
@@ -57,17 +59,21 @@ class AddIpaTranscriptDialog(qt.QDialog):
 
     def _setup_progressbar(self) -> None:
         self.progress = qt.QProgressBar(self)
+        self.progress.setMinimum(0)
+        self.progress.setMaximum(len(self.selected_notes))
         self.progress_changed.connect(self.on_progress_changed)
 
     def _setup_buttons(self) -> None:
         """Setup add button."""
         button_box = qt.QDialogButtonBox(qt.Qt.Horizontal, self)
         add_button = button_box.addButton("Add", qt.QDialogButtonBox.ActionRole)
+        close_button = button_box.addButton("Cancel", qt.QDialogButtonBox.RejectRole)
 
         self.bottom_hbox = qt.QHBoxLayout()
         self.bottom_hbox.addWidget(button_box)
 
         add_button.clicked.connect(self.on_confirm)
+        close_button.clicked.connect(self.close)
 
     def _setup_main(self) -> None:
         """Setup diag window."""
@@ -99,6 +105,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         question = f"This will overwrite the current content of the IPA transcription field. Proceed?"
         if not askUser(question, parent=self):
             return
+
         batch_edit_notes(
             self.browser,
             self.selected_notes,
@@ -121,7 +128,6 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, bas
     :param target_field: name of the target field for IPA transcription
     :param progress: progressbar signal
     """
-    print(type(progress))
     mw = browser.mw
     mw.checkpoint("batch edit")
     mw.progress.start()
@@ -134,7 +140,8 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, bas
             try:
                 note[target_field] = parse_ipa.transcript(words=words, language=lang)
             # IPA transcription not found
-            except IndexError:
+            except (urllib.error.HTTPError, IndexError):
+                progress.emit(index)
                 continue
 
             progress.emit(index)
