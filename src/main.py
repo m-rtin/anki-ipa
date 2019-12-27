@@ -9,6 +9,8 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 
 import os
 import re
+import urllib
+
 from .typing import List, Callable
 
 from anki.hooks import addHook, wrap
@@ -17,20 +19,12 @@ from aqt.editor import Editor
 from aqt import mw
 
 from . import parse_ipa
+from . import batch_editing
+from . import consts
 
 ADDON_PATH = os.path.dirname(__file__)
 ICON_PATH = os.path.join(ADDON_PATH, "icons", "button.png")
 CONFIG = mw.addonManager.getConfig(__name__)
-
-LANGUAGES_MAP = {
-    'eng_b': 'british',
-    'eng_a': 'american',
-    'ru': 'russian',
-    'fr': 'french',
-    'es': 'spanish',
-    'ger': 'german',
-    'pl': 'polish'
-}
 
 select_elm = ("""<select onchange='pycmd("IPALang:" +"""
               """ this.selectedOptions[0].text)' """
@@ -46,12 +40,12 @@ def paste_ipa(editor: Editor) -> None:
     note = editor.note
 
     try:
-        input = note[CONFIG["WORD_FIELD"]]
+        field_text = note[CONFIG["WORD_FIELD"]]
     except KeyError:
         showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
         return
 
-    words = strip_list(re.findall(r"[\w']+", input))
+    words = get_words_from_field(field_text)
 
     try:
         ipa = parse_ipa.transcript(words=words, language=lang_alias)
@@ -73,13 +67,18 @@ def paste_ipa(editor: Editor) -> None:
     editor.web.eval("focusField(%d);" % editor.currentField)
 
 
+def get_words_from_field(field_text: str) -> List[str]:
+    words = strip_list(re.findall(r"[\w']+", field_text))
+    return words
+
+
 def strip_list(list_: List[str]) -> List[str]:
     """ Removes HTML code from list elements.
 
     :param list_: list of IPA transcriptions
     :return: cleaned list (no HTML code)
     """
-    codes = ["nbsp", "i", "b", "u"]
+    codes = ["nbsp", "i", "b", "u", "div", "br"]
     return [element for element in list_ if element not in codes]
 
 
@@ -128,7 +127,7 @@ def on_setup_buttons(buttons: List[str], editor: Editor) -> List[str]:
 
     options += [
         f"""<option>{language}</option>"""
-        for language in sorted(LANGUAGES_MAP.keys(), key=str.lower)
+        for language in sorted(consts.LANGUAGES_MAP.keys(), key=str.lower)
         if language != previous_lang
     ]
 
@@ -158,7 +157,7 @@ def on_ipa_language_select(editor: Editor, lang: str) -> None:
     :param editor: Anki editor window
     :param lang: name of selected language
     """
-    alias = LANGUAGES_MAP[lang]
+    alias = consts.LANGUAGES_MAP[lang]
     set_default_lang(mw, lang)
     editor.ipa_lang_alias = alias
 
@@ -169,7 +168,7 @@ def init_ipa(editor: Editor, *args, **kwargs) -> None:
     :param editor: Anki editor window
     """
     previous_lang = get_default_lang(mw)
-    editor.ipa_lang_alias = LANGUAGES_MAP.get(previous_lang, "")
+    editor.ipa_lang_alias = consts.LANGUAGES_MAP.get(previous_lang, "")
 
 
 def on_bridge_cmd(editor: Editor, command: str, _old: Callable) -> None:
@@ -192,3 +191,6 @@ def on_bridge_cmd(editor: Editor, command: str, _old: Callable) -> None:
 addHook("setupEditorButtons", on_setup_buttons)
 Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, on_bridge_cmd, "around")
 Editor.__init__ = wrap(Editor.__init__, init_ipa)
+
+# Batch editing
+addHook("browser.setupMenus", batch_editing.setup_menu)
