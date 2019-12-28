@@ -8,6 +8,7 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
 
 import re
+
 from src.typing import List
 
 

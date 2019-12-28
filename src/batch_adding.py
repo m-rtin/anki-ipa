@@ -139,11 +139,11 @@ def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, bas
                 note[target_field] = parse_ipa_transcription.transcript(words=words, language=lang)
             # IPA transcription not found
             except (urllib.error.HTTPError, IndexError):
-                progress.emit(index)
                 continue
 
-            progress.emit(index)
             note.flush()
+
+        progress.emit(index)
 
     browser.model.endReset()
     mw.requireReset()
@@ -173,5 +173,5 @@ def setup_menu(browser: Browser) -> None:
     menu.addSeparator()
     a = menu.addAction('Add IPA ...')
 
-    # call onBatchEdit if entry is clicked
+    # call on_batch_edit if entry is clicked
     a.triggered.connect(lambda _, b=browser: on_batch_edit(b))
