@@ -17,10 +17,4 @@ LANGUAGES_MAP = {
     'pl': 'polish'
 }
 
-DEFAULT_CONFIG = {
-    "WORD_FIELD": "Front",
-    "IPA_FIELD": "IPA",
-    "defaultlangperdeck": 1,
-    "deckdefaultlang": {},
-    "lang": "eng_a"
-}
+
