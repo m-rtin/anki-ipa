@@ -10,17 +10,17 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 import os
 import urllib
 
-from .typing import List, Callable
-
 from anki.hooks import addHook, wrap
-from aqt.utils import showInfo
-from aqt.editor import Editor
 from aqt import mw
+from aqt.editor import Editor
+from aqt.utils import showInfo
 
-from . import parse_ipa_transcription
 from . import batch_adding
 from . import consts
 from . import misc
+from . import parse_ipa_transcription
+from .config import setup_synced_config
+from .typing import List, Callable
 
 ADDON_PATH = os.path.dirname(__file__)
 ICON_PATH = os.path.join(ADDON_PATH, "icons", "button.png")
@@ -174,6 +174,7 @@ def on_bridge_cmd(editor: Editor, command: str, _old: Callable) -> None:
         on_ipa_language_select(editor, lang)
 
 
+addHook("profileLoaded", setup_synced_config)
 # Overwrite Editor methods
 addHook("setupEditorButtons", on_setup_buttons)
 Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, on_bridge_cmd, "around")
