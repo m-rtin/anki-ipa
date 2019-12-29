@@ -21,8 +21,6 @@ from . import misc
 class AddIpaTranscriptDialog(qt.QDialog):
     """QDialog to add IPA transcription to multiple notes in Anki browser."""
 
-    progress_changed = qt.pyqtSignal(int)
-
     def __init__(self, browser: Browser, selected_notes: List[int]) -> None:
         """Initialize AddIpaTranscriptDialog."""
         qt.QDialog.__init__(self, parent=browser)
@@ -61,7 +59,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.progress = qt.QProgressBar(self)
         self.progress.setMinimum(0)
         self.progress.setMaximum(len(self.selected_notes))
-        self.progress_changed.connect(self.on_progress_changed)
+        # self.progress_changed.connect(self.on_progress_changed)
 
     def _setup_buttons(self) -> None:
         """Setup add button."""
@@ -90,7 +88,6 @@ class AddIpaTranscriptDialog(qt.QDialog):
         fields = mw.col.models.fieldNames(model)
         return fields
 
-    @qt.pyqtSlot(int)
     def on_progress_changed(self, value) -> None:
         """ Update progress bar value.
 
@@ -104,51 +101,83 @@ class AddIpaTranscriptDialog(qt.QDialog):
         if not askUser(question, parent=self):
             return
 
-        batch_edit_notes(
+        arguments = (
             self.browser,
             self.selected_notes,
             self.lang_combobox.currentText(),
             self.base_combobox.currentText(),
             self.field_combobox.currentText(),
-            self.progress_changed
         )
-        self.close()
+
+        self.worker = BatchAdding(*arguments)
+        self.thread = qt.QThread()
+
+        self.worker.progress_changed.connect(self.on_progress_changed)
+        self.worker.moveToThread(self.thread)
+        self.worker.finished.connect(self.thread.quit)
+        self.thread.started.connect(self.worker.batch_edit_notes)
+        self.thread.finished.connect(self.close)
+        self.thread.start()
+
+        # batch_edit_notes(
+        #     self.browser,
+        #     self.selected_notes,
+        #     self.lang_combobox.currentText(),
+        #     self.base_combobox.currentText(),
+        #     self.field_combobox.currentText(),
+        #     self.progress_changed
+        # )
+        # self.close()
 
 
-def batch_edit_notes(browser: Browser, selected_notes: List[int], lang: str, base_field: str,
-                     target_field: str, progress: qt.pyqtBoundSignal) -> None:
-    """ Add IPA transcription to all selected notes.
+class BatchAdding(qt.QObject):
+    finished = qt.pyqtSignal()
+    progress_changed = qt.pyqtSignal(int)
 
-    :param browser:  Anki browser
-    :param selected_notes: selected notes in browser to which we want to add IPA transcription
-    :param lang: language for the IPA transcription
-    :param base_field: name of the base field for IPA transcription
-    :param target_field: name of the target field for IPA transcription
-    :param progress: progressbar signal
-    """
-    mw = browser.mw
-    mw.checkpoint("batch edit")
-    mw.progress.start()
-    browser.model.beginReset()
+    def __init__(self, browser, selected_notes, lang, base_field, target_field):
+        super().__init__()
+        self.browser = browser
+        self.selected_notes = selected_notes
+        self.lang = lang
+        self.base_field = base_field
+        self.target_field = target_field
 
-    for index, selected_note in enumerate(selected_notes):
-        note = mw.col.getNote(selected_note)
-        if base_field in note and target_field in note:
-            words = misc.get_words_from_field(field_text=note[base_field])
-            try:
-                note[target_field] = parse_ipa_transcription.transcript(words=words, language=lang)
-            # IPA transcription not found
-            except (urllib.error.HTTPError, IndexError):
-                continue
+    @qt.pyqtSlot()
+    def batch_edit_notes(self):  # , browser: Browser, selected_notes: List[int], lang: str, base_field: str,
+        # target_field: str) -> None:
+        """ Add IPA transcription to all selected notes.
 
-            note.flush()
+        :param browser:  Anki browser
+        :param selected_notes: selected notes in browser to which we want to add IPA transcription
+        :param lang: language for the IPA transcription
+        :param base_field: name of the base field for IPA transcription
+        :param target_field: name of the target field for IPA transcription
+        :param progress: progressbar signal
+        """
+        mw = self.browser.mw
+        mw.checkpoint("batch edit")
+        mw.progress.start()
+        self.browser.model.beginReset()
 
-        progress.emit(index)
+        for index, selected_note in enumerate(self.selected_notes):
+            note = mw.col.getNote(selected_note)
+            if self.base_field in note and self.target_field in note:
+                words = misc.get_words_from_field(field_text=note[self.base_field])
+                try:
+                    note[self.target_field] = parse_ipa_transcription.transcript(words=words, language=self.lang)
+                # IPA transcription not found
+                except (urllib.error.HTTPError, IndexError):
+                    continue
 
-    browser.model.endReset()
-    mw.requireReset()
-    mw.progress.finish()
-    mw.reset()
+                note.flush()
+
+            self.progress_changed.emit(index)
+
+        self.browser.model.endReset()
+        mw.requireReset()
+        mw.progress.finish()
+        mw.reset()
+        self.finished.emit()
 
 
 def on_batch_edit(browser: Browser) -> None:
