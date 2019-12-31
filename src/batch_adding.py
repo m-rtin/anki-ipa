@@ -24,6 +24,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
     def __init__(self, browser: Browser, selected_notes: List[int]) -> None:
         """Initialize AddIpaTranscriptDialog."""
         qt.QDialog.__init__(self, parent=browser)
+        self.thread = qt.QThread()
         self.browser = browser
         self.selected_notes = selected_notes
         self._setup_comboboxes()
@@ -96,19 +97,14 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.progress.setValue(value)
 
     def on_confirm(self) -> None:
-        """Call batch_edit_notes if button is clicked."""
+        """Get IPA transcriptions."""
         question = f"This will overwrite the current content of the IPA transcription field. Proceed?"
         if not askUser(question, parent=self):
             return
 
-        # map each note id to the corresponding Anki note object
-        notes = {
-            note: self.browser.mw.col.getNote(note)
-            for note in self.selected_notes
-        }
+        notes = self._create_note_dictionary()
 
         self.worker = Worker(notes, self.lang_combobox.currentText(), self.base_combobox.currentText())
-        self.thread = qt.QThread()
 
         # connect methods
         self.worker.progress_changed.connect(self.on_progress_changed)
@@ -116,13 +112,26 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.worker.finished.connect(self.thread.quit)
 
         # thread management
+        self.worker.moveToThread(qt.QThread.currentThread())
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.thread.finished.connect(self.close)
         self.thread.start()
 
+    def _create_note_dictionary(self):
+        """Map each note id to the corresponding Anki note object."""
+        notes = {
+            note: self.browser.mw.col.getNote(note)
+            for note in self.selected_notes
+        }
+        return notes
+
     @qt.pyqtSlot(dict)
     def add_ipa_transcription(self, result_dict):
+        """ Add IPA transcriptions to the target fields of all selected notes.
+
+        :param result_dict: dictionary of Anki notes and their IPA transcriptions
+        """
         mw = self.browser.mw
         mw.checkpoint("add ipa transcription")
         mw.progress.start()
@@ -139,6 +148,11 @@ class AddIpaTranscriptDialog(qt.QDialog):
         mw.progress.finish()
         mw.reset()
 
+    def closeEvent(self, event):
+        self.worker.stop()
+        self.thread.quit()
+        event.accept()
+
 
 class Worker(qt.QObject):
     finished = qt.pyqtSignal()
@@ -150,9 +164,11 @@ class Worker(qt.QObject):
         self.notes = notes
         self.lang = lang
         self.base_field = base_field
+        self._isRunning = True
 
     @qt.pyqtSlot()
     def run(self):
+        """Get IPA transcription for each note and save it into a dictionary."""
         new_dict = dict()
         for index, key in enumerate(self.notes.keys()):
             try:
@@ -161,9 +177,14 @@ class Worker(qt.QObject):
             # IPA transcription not found
             except (urllib.error.HTTPError, IndexError):
                 continue
+
             self.progress_changed.emit(index)
+
         self.result.emit(new_dict)
         self.finished.emit()
+
+    def stop(self):
+        self._isRunning = False
 
 
 def on_batch_edit(browser: Browser) -> None:
