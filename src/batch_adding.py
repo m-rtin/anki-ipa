@@ -152,6 +152,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.worker.stop()
         self.thread.quit()
         event.accept()
+        self.thread.wait()
 
 
 class Worker(qt.QObject):
