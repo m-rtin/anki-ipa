@@ -14,7 +14,7 @@ def setup_synced_config() -> None:
     """Create new configuration if not already done."""
     conf_name = "anki_ipa_conf"
 
-    if not conf_name in mw.col.conf:
+    if conf_name not in mw.col.conf:
         mw.col.conf[conf_name] = {
             "WORD_FIELD": "Front",
             "IPA_FIELD": "IPA",
