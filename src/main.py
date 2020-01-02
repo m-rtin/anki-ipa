@@ -24,6 +24,7 @@ from .typing import List, Callable
 
 ADDON_PATH = os.path.dirname(__file__)
 ICON_PATH = os.path.join(ADDON_PATH, "icons", "button.png")
+CONFIG = mw.addonManager.getConfig(__name__)
 
 select_elm = ("""<select onchange='pycmd("IPALang:" +"""
               """ this.selectedOptions[0].text)' """
@@ -35,14 +36,13 @@ def paste_ipa(editor: Editor) -> None:
 
     :param editor: Anki editor window
     """
-    config = mw.col.conf['anki_ipa_conf']
     lang_alias = editor.ipa_lang_alias
     note = editor.note
 
     try:
-        field_text = note[config["WORD_FIELD"]]
+        field_text = note[CONFIG["WORD_FIELD"]]
     except KeyError:
-        showInfo(f"Field '{config['WORD_FIELD']}' doesn't exist.")
+        showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
         return
 
     words = misc.get_words_from_field(field_text)
@@ -57,9 +57,9 @@ def paste_ipa(editor: Editor) -> None:
     ipa.replace("ɪm", "")
 
     try:
-        note[config["IPA_FIELD"]] = ipa
+        note[CONFIG["IPA_FIELD"]] = ipa
     except KeyError:
-        showInfo(f"Field '{config['IPA_FIELD']}' doesn't exist.")
+        showInfo(f"Field '{CONFIG['IPA_FIELD']}' doesn't exist.")
         return
 
     editor.loadNote()
