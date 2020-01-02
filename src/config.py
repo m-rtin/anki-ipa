@@ -16,8 +16,9 @@ def setup_synced_config() -> None:
 
     if conf_name not in mw.col.conf:
         mw.col.conf[conf_name] = {
-            "WORD_FIELD": "Front",
-            "IPA_FIELD": "IPA",
+            "defaultlangperdeck": 1,
+            "deckdefaultlang": {},  # default addon language for specific decks
+            "lang": "eng_a"
         }
 
     mw.col.setMod()
