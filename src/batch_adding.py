@@ -148,7 +148,8 @@ class AddIpaTranscriptDialog(qt.QDialog):
         mw.progress.finish()
         mw.reset()
 
-    def closeEvent(self, event):
+    def closeEvent(self, event: qt.QCloseEvent) -> None:
+        """Stop worker and thread when window is closed by user."""
         self.worker.stop()
         self.thread.quit()
         event.accept()
@@ -184,7 +185,8 @@ class Worker(qt.QObject):
         self.result.emit(new_dict)
         self.finished.emit()
 
-    def stop(self):
+    def stop(self) -> None:
+        """Stop worker."""
         self._isRunning = False
 
 
