@@ -105,7 +105,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         """Get IPA transcriptions for the selected notes.
 
         We get the IPA transcriptions by calling Worker in a different thread.
-        Once it finished we write the results into the right target fields of all the selected notes.
+        Once it finishes we write the results into the right target fields of all the selected notes.
         We can't do this within the thread because SQLite doesn't support multi-threading.
         """
         question = f"This will overwrite the current content of the IPA transcription field. Proceed?"
@@ -137,7 +137,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         return notes
 
     @qt.pyqtSlot(dict)
-    def add_ipa_transcription(self, result_dict) -> None:
+    def add_ipa_transcription(self, result_dict: Dict[int, str]) -> None:
         """ Add IPA transcriptions to the target fields of all selected notes.
 
         :param result_dict: dictionary of Anki notes and their IPA transcriptions
