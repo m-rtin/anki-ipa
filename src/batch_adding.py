@@ -11,8 +11,9 @@ import urllib
 from aqt.browser import Browser
 from aqt.utils import tooltip, askUser
 import aqt.qt as qt
+import anki
 
-from .typing import List
+from .typing import List, Dict
 from . import consts
 from . import parse_ipa_transcription
 from . import misc
@@ -22,7 +23,11 @@ class AddIpaTranscriptDialog(qt.QDialog):
     """QDialog to add IPA transcription to multiple notes in Anki browser."""
 
     def __init__(self, browser: Browser, selected_notes: List[int]) -> None:
-        """Initialize AddIpaTranscriptDialog."""
+        """ Initialize AddIpaTranscriptDialog and setup UI.
+
+        :param browser: Anki browser
+        :param selected_notes: IDs of selected notes in Anki browser
+        """
         qt.QDialog.__init__(self, parent=browser)
         self.thread = qt.QThread()
         self.browser = browser
@@ -97,7 +102,12 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.progress.setValue(value)
 
     def on_confirm(self) -> None:
-        """Get IPA transcriptions."""
+        """Get IPA transcriptions for the selected notes.
+
+        We get the IPA transcriptions by calling Worker in a different thread.
+        Once it finished we write the results into the right target fields of all the selected notes.
+        We can't do this within the thread because SQLite doesn't support multi-threading.
+        """
         question = f"This will overwrite the current content of the IPA transcription field. Proceed?"
         if not askUser(question, parent=self):
             return
@@ -118,7 +128,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.thread.finished.connect(self.close)
         self.thread.start()
 
-    def _create_note_dictionary(self):
+    def _create_note_dictionary(self) -> Dict[int, anki.notes.Note]:
         """Map each note id to the corresponding Anki note object."""
         notes = {
             note: self.browser.mw.col.getNote(note)
@@ -127,7 +137,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
         return notes
 
     @qt.pyqtSlot(dict)
-    def add_ipa_transcription(self, result_dict):
+    def add_ipa_transcription(self, result_dict) -> None:
         """ Add IPA transcriptions to the target fields of all selected notes.
 
         :param result_dict: dictionary of Anki notes and their IPA transcriptions
@@ -149,7 +159,10 @@ class AddIpaTranscriptDialog(qt.QDialog):
         mw.reset()
 
     def closeEvent(self, event: qt.QCloseEvent) -> None:
-        """Stop worker and thread when window is closed by user."""
+        """ Stop worker and thread when window is closed by user.
+
+        :param event: user wants to close window
+        """
         self.worker.stop()
         self.thread.quit()
         event.accept()
@@ -157,11 +170,19 @@ class AddIpaTranscriptDialog(qt.QDialog):
 
 
 class Worker(qt.QObject):
+    """Worker to get the IPA transcriptions of the selected Anki notes."""
+
     finished = qt.pyqtSignal()
     progress_changed = qt.pyqtSignal(int)
     result = qt.pyqtSignal(dict)
 
-    def __init__(self, notes, lang, base_field):
+    def __init__(self, notes: Dict[int, anki.notes.Note], lang: str, base_field: str) -> None:
+        """ Initialize Worker.
+
+        :param notes: Anki notes we want to use
+        :param lang: language of base field content
+        :param base_field: field for which we want to get IPA transcriptions
+        """
         super().__init__()
         self.notes = notes
         self.lang = lang
@@ -169,7 +190,7 @@ class Worker(qt.QObject):
         self._isRunning = True
 
     @qt.pyqtSlot()
-    def run(self):
+    def run(self) -> None:
         """Get IPA transcription for each note and save it into a dictionary."""
         new_dict = dict()
         for index, key in enumerate(self.notes.keys()):
