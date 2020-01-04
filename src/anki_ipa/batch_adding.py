@@ -14,9 +14,7 @@ import aqt.qt as qt
 import anki
 
 from .typing import List, Dict
-from . import consts
-from . import parse_ipa_transcription
-from . import misc
+from src.anki_ipa import consts, parse_ipa_transcription, misc
 
 
 class AddIpaTranscriptDialog(qt.QDialog):

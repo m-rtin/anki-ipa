@@ -15,10 +15,7 @@ from aqt import mw
 from aqt.editor import Editor
 from aqt.utils import showInfo
 
-from . import batch_adding
-from . import consts
-from . import misc
-from . import parse_ipa_transcription
+from src.anki_ipa import consts, parse_ipa_transcription, misc, batch_adding
 from .config import setup_synced_config
 from .typing import List, Callable
 

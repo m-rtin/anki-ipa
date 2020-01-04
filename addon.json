@@ -1,14 +1,14 @@
 {
-  "display_name": "Anki IPA",
-  "module_name": "anki_ipa",
-  "repo_name": "anki-ipa",
-  "ankiweb_id": "799647424",
-  "author": "m-rtin",
-  "homepage": "https://github.com/m-rtin/anki-ipa",
-  "copyright_start": 2018,
-  "tags": "IPA",
-  "conflicts": [],
-  "targets": [
-    "anki21"
-  ]
+    "display_name": "Anki IPA",
+    "module_name": "anki_ipa",
+    "repo_name": "anki-ipa",
+    "ankiweb_id": "799647424",
+    "author": "m-rtin",
+    "homepage": "https://github.com/m-rtin/anki-ipa",
+    "copyright_start": 2018,
+    "tags": "IPA",
+    "conflicts": [],
+    "targets": [
+        "anki21"
+    ]
 }
