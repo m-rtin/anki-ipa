@@ -13,8 +13,8 @@ from aqt.utils import tooltip, askUser
 import aqt.qt as qt
 import anki
 
-from .typing import List, Dict
-from src.anki_ipa import consts, parse_ipa_transcription, misc
+from typing import List, Dict
+from . import consts, parse_ipa_transcription, misc
 
 
 class AddIpaTranscriptDialog(qt.QDialog):

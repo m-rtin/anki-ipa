@@ -9,7 +9,7 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 
 import re
 
-from .typing import List
+from typing import List
 
 
 def get_words_from_field(field_text: str) -> List[str]:

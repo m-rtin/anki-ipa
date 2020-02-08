@@ -15,9 +15,9 @@ from aqt import mw
 from aqt.editor import Editor
 from aqt.utils import showInfo
 
-from src.anki_ipa import consts, parse_ipa_transcription, misc, batch_adding
+from . import consts, parse_ipa_transcription, misc, batch_adding
 from .config import setup_synced_config
-from .typing import List, Callable
+from typing import List, Callable
 
 ADDON_PATH = os.path.dirname(__file__)
 ICON_PATH = os.path.join(ADDON_PATH, "icons", "button.png")
