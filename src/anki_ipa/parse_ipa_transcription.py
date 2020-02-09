@@ -35,14 +35,14 @@ def get_english_ipa_list(word):
 @transcription
 def british(word):
     ipa = get_english_ipa_list(word)
-    result = ipa[0][3:].replace("//", "")
+    result = ipa[0].replace("/", "")
     return result
 
 
 @transcription
 def american(word):
     ipa = get_english_ipa_list(word)
-    result = ipa[1][4:].replace("//", "")
+    result = ipa[1].replace("/", "")
     return result
 
 
