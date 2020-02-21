@@ -56,7 +56,7 @@ def russian(word):
 @transcription
 def french(word):
     link = f"https://fr.wiktionary.org/wiki/{word}"
-    results = parse_wiktionary(link, {'title': 'prononciation API'})
+    results = parse_wiktionary(link, {'title': 'Prononciation API'})
     return results[0].getText().replace("\\", "")
 
 
