@@ -14,11 +14,9 @@ import parse_ipa_transcription as parse_ipa
 class TestParseIpa(unittest.TestCase):
 
     def test_british(self):
-        self.assertEqual(parse_ipa.british("go"), "ɡəʊ")
         self.assertEqual(parse_ipa.british("box"), "bɒks")
 
     def test_american(self):
-        self.assertEqual(parse_ipa.american("go"), "ɡoʊ")
         self.assertEqual(parse_ipa.american("box"), "bɑːks")
 
     def test_russian(self):
