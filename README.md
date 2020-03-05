@@ -12,17 +12,9 @@ Allows you to insert IPA transcriptions into the spaced-repetition flashcard app
 
 ### Installation
 
-#### AnkiWeb <!-- omit in toc -->
 
 The easiest way to install Anki IPA is through [AnkiWeb](https://ankiweb.net/shared/info/799647424).
 
-#### Manual installation <!-- omit in toc -->
-
-1. Make sure you have the [latest version](https://apps.ankiweb.net/#download) of Anki 2.1 installed. Earlier releases (e.g. found in various Linux distros) do not support `.ankiaddon` packages.
-2. Download the latest `.ankiaddon` package from the [releases tab](https://github.com/m-rtin/anki-ipa/releases/) (you might need to click on *Assets* below the description to reveal the download links)
-3. From Anki's main window, head to *Tools* → *Add-ons*
-4. Drag-and-drop the `.ankiaddon` package onto the add-ons list
-5. Restart Anki
 
 ### License and Credits
 
