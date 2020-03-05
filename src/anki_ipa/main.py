@@ -15,7 +15,7 @@ from aqt import mw
 from aqt.editor import Editor
 from aqt.utils import showInfo
 
-from . import consts, parse_ipa_transcription, misc, batch_adding
+from . import consts, parse_ipa_transcription, utils, batch_adding
 from .config import setup_synced_config
 from typing import List, Callable
 
@@ -42,7 +42,7 @@ def paste_ipa(editor: Editor) -> None:
         showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
         return
 
-    words = misc.get_words_from_field(field_text)
+    words = utils.get_words_from_field(field_text)
 
     try:
         ipa = parse_ipa_transcription.transcript(words=words, language=lang_alias)
