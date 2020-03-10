@@ -36,14 +36,17 @@ def paste_ipa(editor: Editor) -> None:
     lang_alias = editor.ipa_lang_alias
     note = editor.note
 
+    # Get content of text field
     try:
         field_text = note[CONFIG["WORD_FIELD"]]
     except KeyError:
         showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
         return
 
+    # get word list from text field
     words = utils.get_words_from_field(field_text)
 
+    # parse IPA transcription for every word in word list
     try:
         ipa = parse_ipa_transcription.transcript(words=words, language=lang_alias)
     except (urllib.error.HTTPError, IndexError):
@@ -53,12 +56,14 @@ def paste_ipa(editor: Editor) -> None:
     # workaround for cursive on Mac OS
     ipa.replace("ɪm", "")
 
+    # paste IPA transcription of every word in IPA transcription field
     try:
         note[CONFIG["IPA_FIELD"]] = ipa
     except KeyError:
         showInfo(f"Field '{CONFIG['IPA_FIELD']}' doesn't exist.")
         return
 
+    # update editor
     editor.loadNote()
     editor.web.setFocus()
     editor.web.eval("focusField(%d);" % editor.currentField)
