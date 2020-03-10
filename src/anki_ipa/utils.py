@@ -18,6 +18,8 @@ def get_words_from_field(field_text: str) -> List[str]:
     :param field_text: text of the given field
     :return: words in the given field
     """
-    words = re.findall(r"[\w']+", field_text)
-    codes = ["nbsp", "i", "b", "u", "div", "br", "span", "style", "rgb", "color", "41", "43", "44"]
-    return [element for element in words if element not in codes]
+    clean_regex = re.compile('<.*?>')
+    cleaned_textfield = re.sub(clean_regex, '', field_text)
+    cleaned_textfield = cleaned_textfield.replace("&nbsp;", " ")
+
+    return cleaned_textfield.split()
