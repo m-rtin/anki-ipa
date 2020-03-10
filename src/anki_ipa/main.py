@@ -9,6 +9,7 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 
 import os
 import urllib
+import logging
 
 from anki.hooks import addHook, wrap
 from aqt import mw
@@ -18,6 +19,9 @@ from aqt.utils import showInfo
 from . import consts, parse_ipa_transcription, utils, batch_adding
 from .config import setup_synced_config
 from typing import List, Callable
+
+filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), "app.log")
+logging.basicConfig(filename=filename, level=logging.DEBUG)
 
 ADDON_PATH = os.path.dirname(__file__)
 ICON_PATH = os.path.join(ADDON_PATH, "icons", "button.png")
@@ -42,9 +46,11 @@ def paste_ipa(editor: Editor) -> None:
     except KeyError:
         showInfo(f"Field '{CONFIG['WORD_FIELD']}' doesn't exist.")
         return
+    logging.debug(f"Field text: {field_text}")
 
     # get word list from text field
     words = utils.get_words_from_field(field_text)
+    logging.debug(f"Word list: {words}")
 
     # parse IPA transcription for every word in word list
     try:
@@ -52,6 +58,7 @@ def paste_ipa(editor: Editor) -> None:
     except (urllib.error.HTTPError, IndexError):
         showInfo("IPA not found.")
         return
+    logging.debug(f"IPA transcription string: {ipa}")
 
     # workaround for cursive on Mac OS
     ipa.replace("ɪm", "")
