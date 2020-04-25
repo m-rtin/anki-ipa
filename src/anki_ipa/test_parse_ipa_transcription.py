@@ -36,6 +36,9 @@ class TestParseIpa(unittest.TestCase):
         self.assertEqual(parse_ipa.polish("asteroida"), "ˌastɛˈrɔjda")
         self.assertEqual(parse_ipa.polish("mały"), "ˈmawɨ")
 
+    def test_dutch(self):
+        self.assertEqual(parse_ipa.dutch("wit"), "ʋɪt")
+        self.assertEqual(parse_ipa.dutch("lucht"), "lʏxt")
 
 if __name__ == "__main__":
     unittest.main()
