@@ -14,7 +14,8 @@ LANGUAGES_MAP = {
     'fr': 'french',
     'es': 'spanish',
     'ger': 'german',
-    'pl': 'polish'
+    'pl': 'polish',
+    'nl': 'dutch'
 }
 
 
