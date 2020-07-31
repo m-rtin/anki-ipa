@@ -4,7 +4,7 @@
 <p align="center">
 <a title="License: GNU AGPLv3" href="https://github.com/m-rtin/anki-ipa/blob/master/LICENSE"><img  src="https://img.shields.io/badge/license-GNU AGPLv3-green.svg"></a>
 <a title="Rate on AnkiWeb" href="https://ankiweb.net/shared/info/799647424"><img src="https://glutanimate.com/logos/ankiweb-rate.svg"></a>
-  [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P11ZX6P)
+  <a title="Buy me a coffee" href="https://ko-fi.com/P5P11ZX6P"><img src="https://www.ko-fi.com/img/githubbutton_sm.svg"></a>
 <br>
 </p>
 
