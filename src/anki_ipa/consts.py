@@ -8,6 +8,7 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
 
 LANGUAGES_MAP = {
+    'eng': 'english',
     'eng_b': 'british',
     'eng_a': 'american',
     'ru': 'russian',

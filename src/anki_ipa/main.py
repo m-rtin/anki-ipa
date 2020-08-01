@@ -11,6 +11,8 @@ import os
 import urllib
 import logging
 
+from .eng_to_ipa import transcribe
+
 from anki.hooks import addHook, wrap
 from aqt import mw
 from aqt.editor import Editor
@@ -48,20 +50,20 @@ def paste_ipa(editor: Editor) -> None:
         return
     logging.debug(f"Field text: {field_text}")
 
-    # get word list from text field
-    words = utils.get_words_from_field(field_text)
-    logging.debug(f"Word list: {words}")
+    if lang_alias == "english":
+        ipa = transcribe.convert(field_text)
+    else:
+        # get word list from text field
+        words = utils.get_words_from_field(field_text)
+        logging.debug(f"Word list: {words}")
 
-    # parse IPA transcription for every word in word list
-    try:
-        ipa = parse_ipa_transcription.transcript(words=words, language=lang_alias)
-    except (urllib.error.HTTPError, IndexError):
-        showInfo("IPA not found.")
-        return
-    logging.debug(f"IPA transcription string: {ipa}")
-
-    # workaround for cursive on Mac OS
-    ipa.replace("ɪm", "")
+        # parse IPA transcription for every word in word list
+        try:
+            ipa = parse_ipa_transcription.transcript(words=words, language=lang_alias)
+        except (urllib.error.HTTPError, IndexError):
+            showInfo("IPA not found.")
+            return
+        logging.debug(f"IPA transcription string: {ipa}")
 
     # paste IPA transcription of every word in IPA transcription field
     try:
