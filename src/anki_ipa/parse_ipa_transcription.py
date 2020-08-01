@@ -48,10 +48,14 @@ def spanish(word):
 
 @transcription
 def german(word):
-    link = f"https://de.wiktionary.org/wiki/{word}"
-    results = parse_wiktionary(link, {'class': 'ipa'})
+    try:
+        link = f"https://de.wiktionary.org/wiki/{word}"
+        results = parse_wiktionary(link, {'class': 'ipa'})
+    except (urllib.error.HTTPError, IndexError):
+        word = word.capitalize()
+        link = f"https://de.wiktionary.org/wiki/{word}"
+        results = parse_wiktionary(link, {'class': 'ipa'})
     return results[0].getText()
-
 
 @transcription
 def polish(word):

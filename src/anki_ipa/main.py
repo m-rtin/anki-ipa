@@ -50,6 +50,8 @@ def paste_ipa(editor: Editor) -> None:
         return
     logging.debug(f"Field text: {field_text}")
 
+    field_text = field_text.lower()
+
     if lang_alias == "english":
         ipa = get_english_ipa_transcription(field_text)
     else:
