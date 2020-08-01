@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/martyngal/anki-ipa/blob/master/screenshots/new_screenshot_1.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/martyngal/anki-ipa/master/screenshots/new_screenshot_1.jpg"></p>
 
 <h2 align="center">Anki IPA</h2>
 <p align="center">
