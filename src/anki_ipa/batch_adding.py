@@ -15,6 +15,7 @@ import anki
 
 from typing import List, Dict
 from . import consts, parse_ipa_transcription, utils
+from .parse_ipa_transcription import get_english_ipa_transcription
 
 
 class AddIpaTranscriptDialog(qt.QDialog):
@@ -193,8 +194,11 @@ class Worker(qt.QObject):
         new_dict = dict()
         for index, key in enumerate(self.notes.keys()):
             try:
-                words = utils.get_words_from_field(field_text=self.notes[key][self.base_field])
-                new_dict[key] = parse_ipa_transcription.transcript(words=words, language=self.lang)
+                if self.lang == "english":
+                    new_dict[key] = get_english_ipa_transcription(self.notes[key][self.base_field])
+                else:
+                    words = utils.get_words_from_field(field_text=self.notes[key][self.base_field])
+                    new_dict[key] = parse_ipa_transcription.transcript(words=words, language=self.lang)
             # IPA transcription not found
             except (urllib.error.HTTPError, IndexError):
                 continue
