@@ -13,37 +13,16 @@ import requests
 import ssl
 from typing import List
 
+from .eng_to_ipa import transcribe
+
 # Create a dictionary for all transcription methods
 transcription_methods = {}
 transcription = lambda f: transcription_methods.setdefault(f.__name__, f)
 
 
-def get_english_ipa_list(word):
-    url = 'https://www.oxfordlearnersdictionaries.com/definition/english/'
-
-    context = ssl._create_unverified_context()
-    page = urllib.request.urlopen(url + word, context=context)
-    soup = bs4.BeautifulSoup(page, "html.parser")
-
-    results = [
-        x.getText() for x in soup.select('span[class="phon"]')
-    ]
-
-    return results
-
-
-@transcription
-def british(word):
-    ipa = get_english_ipa_list(word)
-    result = ipa[0].replace("/", "")
-    return result
-
-
-@transcription
-def american(word):
-    ipa = get_english_ipa_list(word)
-    result = ipa[1].replace("/", "")
-    return result
+def get_english_ipa_transcription(field_content):
+    ipa_transcription = transcribe.convert(field_content)
+    return ipa_transcription
 
 
 @transcription

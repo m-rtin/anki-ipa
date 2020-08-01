@@ -11,7 +11,6 @@ import os
 import urllib
 import logging
 
-from .eng_to_ipa import transcribe
 
 from anki.hooks import addHook, wrap
 from aqt import mw
@@ -19,6 +18,7 @@ from aqt.editor import Editor
 from aqt.utils import showInfo
 
 from . import consts, parse_ipa_transcription, utils, batch_adding
+from .parse_ipa_transcription import get_english_ipa_transcription
 from .config import setup_synced_config
 from typing import List, Callable
 
@@ -51,7 +51,7 @@ def paste_ipa(editor: Editor) -> None:
     logging.debug(f"Field text: {field_text}")
 
     if lang_alias == "english":
-        ipa = transcribe.convert(field_text)
+        ipa = get_english_ipa_transcription(field_text)
     else:
         # get word list from text field
         words = utils.get_words_from_field(field_text)
