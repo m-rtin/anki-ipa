@@ -57,6 +57,7 @@ def german(word):
         results = parse_wiktionary(link, {'class': 'ipa'})
     return results[0].getText()
 
+
 @transcription
 def polish(word):
     link = f"https://pl.wiktionary.org/wiki/{word}"
@@ -64,11 +65,14 @@ def polish(word):
         link, {'title': 'To jest wymowa w zapisie IPA; zobacz hasło IPA w Wikipedii'})
     return results[0].getText().replace("[", "").replace("]", "")
 
+
 @transcription
 def dutch(word):
     link = f"https://nl.wiktionary.org/wiki/{word}"
-    results = parse_wiktionary(link,  {'style': 'font-family:Gentium, Gentium Alternative, Arial Unicode MS, Lucida Sans Unicode, Lucida Grande, TITUS Cyberbit Basic, Doulos SIL, Code2000, MS Mincho, Arial;text-decoration:none; font-size: 110%;'} )
+    results = parse_wiktionary(link, {
+        'style': 'font-family:Gentium, Gentium Alternative, Arial Unicode MS, Lucida Sans Unicode, Lucida Grande, TITUS Cyberbit Basic, Doulos SIL, Code2000, MS Mincho, Arial;text-decoration:none; font-size: 110%;'})
     return results[0].getText().replace("/", "").replace("/", "")
+
 
 def parse_wiktionary(link, css_code):
     website = requests.get(link)
