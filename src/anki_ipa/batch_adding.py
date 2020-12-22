@@ -13,10 +13,12 @@ from aqt.utils import tooltip, askUser
 import aqt.qt as qt
 import anki
 
+from aqt import mw
+CONFIG = mw.addonManager.getConfig(__name__)
+
 from typing import List, Dict
 from . import consts, parse_ipa_transcription, utils
 from .parse_ipa_transcription import get_english_ipa_transcription
-
 
 class AddIpaTranscriptDialog(qt.QDialog):
     """QDialog to add IPA transcription to multiple notes in Anki browser."""
@@ -43,10 +45,22 @@ class AddIpaTranscriptDialog(qt.QDialog):
 
         self.lang_combobox = qt.QComboBox()
         self.lang_combobox.addItems(consts.LANGUAGES_MAP.values())
+        if "LANGUAGE" in CONFIG.keys():
+            idx_language=self.lang_combobox.findText(CONFIG["LANGUAGE"])
+            if idx_language > 0:
+                self.lang_combobox.setCurrentIndex(idx_language)
         self.base_combobox = qt.QComboBox()
         self.base_combobox.addItems(fields)
+        if "WORD_FIELD" in CONFIG.keys():
+            idx_word=self.base_combobox.findText(CONFIG["WORD_FIELD"])
+            if idx_word > 0:
+                self.base_combobox.setCurrentIndex(idx_word)
         self.field_combobox = qt.QComboBox()
         self.field_combobox.addItems(fields)
+        if "IPA_FIELD" in CONFIG.keys():
+            idx_ipa=self.field_combobox.findText(CONFIG["IPA_FIELD"])
+            if idx_ipa > 0:
+                self.field_combobox.setCurrentIndex(idx_ipa)
 
     def _setup_form(self) -> None:
         """Setup form for user interaction."""
