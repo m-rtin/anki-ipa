@@ -162,7 +162,8 @@ class AddIpaTranscriptDialog(qt.QDialog):
 
         :param event: user wants to close window
         """
-        self.worker.stop()
+        if hasattr(self, 'worker'):
+            self.worker.stop()
         self.thread.quit()
         event.accept()
         self.thread.wait()
