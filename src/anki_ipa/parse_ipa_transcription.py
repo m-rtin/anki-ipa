@@ -49,7 +49,7 @@ def spanish(word):
 
 @transcription
 def german(word):
-    link = f"https://de.wiktionary.org/wiki/{word.capitalize()}"
+    link = f"https://de.wiktionary.org/wiki/{word}"
     transcriptions = parse_website(link, {'class': 'ipa'})
     if len(transcriptions) == 1:
         return transcriptions[0]
