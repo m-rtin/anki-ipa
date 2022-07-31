@@ -25,8 +25,6 @@ Go to the anki-ipa/src/anki_ipa directory and run:
 
 *Anki IPA* is based on [*Syntax Highlighting for Code*](https://ankiweb.net/shared/info/1463041493) and [*Batch Editing*](https://ankiweb.net/shared/info/291119185) by [Glutanimate](https://github.com/glutanimate). 
 
-The English IPA transcription now uses the [English-to-IPA](https://github.com/mphilli/English-to-IPA) module.
-
 Anki IPA is free and open-source software. The add-on code that runs within Anki is released under the GNU AGPLv3 license, extended by a number of additional terms. For more information please see the [LICENSE](https://github.com/m-rtin/anki-ipa/blob/master/LICENSE) file that accompanied this program.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
