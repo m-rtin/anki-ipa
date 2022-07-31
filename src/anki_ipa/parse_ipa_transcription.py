@@ -84,8 +84,7 @@ def polish(word):
 @transcription
 def dutch(word):
     link = f"https://nl.wiktionary.org/wiki/{word}"
-    results = parse_wiktionary(link, {
-        'style': 'font-family:Gentium, Gentium Alternative, Arial Unicode MS, Lucida Sans Unicode, Lucida Grande, TITUS Cyberbit Basic, Doulos SIL, Code2000, MS Mincho, Arial;text-decoration:none; font-size: 110%;'})
+    results = parse_wiktionary(link, {"class": "IPAtekst"})
     return results[0].getText().replace("/", "").replace("/", "")
 
 
