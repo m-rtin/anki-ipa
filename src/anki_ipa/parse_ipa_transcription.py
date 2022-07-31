@@ -9,6 +9,7 @@ License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 
 import urllib
 import bs4
+import re
 import requests
 from typing import List
 
@@ -49,13 +50,16 @@ def spanish(word):
 
 @transcription
 def german(word):
-    link = f"https://de.wiktionary.org/wiki/{word}"
-    transcriptions = parse_website(link, {'class': 'ipa'})
-    if len(transcriptions) == 1:
-        return transcriptions[0]
-    else:
-        # ignore rhyming words
-        return transcriptions[1]
+    payload = {'action': 'parse', 'page': word, 'format': 'json', 'prop': 'wikitext'}
+    r = requests.get('https://de.wiktionary.org/w/api.php', params=payload)
+    try:
+        wikitext = r.json()['parse']['wikitext']['*']
+        p = re.compile("{{IPA}} {{Lautschrift\|([^}]+)")
+        m = p.search(wikitext)
+        ipa = m.group(1)
+        return ipa
+    except (KeyError, AttributeError):
+        return ""
 
 
 @transcription
