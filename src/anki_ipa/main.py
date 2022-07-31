@@ -18,7 +18,6 @@ from aqt.editor import Editor
 from aqt.utils import showInfo
 
 from . import consts, parse_ipa_transcription, utils, batch_adding
-from .parse_ipa_transcription import get_english_ipa_transcription
 from .config import setup_synced_config
 from typing import List, Callable
 
@@ -52,20 +51,17 @@ def paste_ipa(editor: Editor) -> None:
 
     field_text = field_text.lower()
 
-    if lang_alias == "english":
-        ipa = get_english_ipa_transcription(field_text)
-    else:
-        # get word list from text field
-        words = utils.get_words_from_field(field_text)
-        logging.debug(f"Word list: {words}")
+    # get word list from text field
+    words = utils.get_words_from_field(field_text)
+    logging.debug(f"Word list: {words}")
 
-        # parse IPA transcription for every word in word list
-        try:
-            ipa = parse_ipa_transcription.transcript(words=words, language=lang_alias)
-        except (urllib.error.HTTPError, IndexError):
-            showInfo("IPA not found.")
-            return
-        logging.debug(f"IPA transcription string: {ipa}")
+    # parse IPA transcription for every word in word list
+    try:
+        ipa = parse_ipa_transcription.transcript(words=words, language=lang_alias)
+    except (urllib.error.HTTPError, IndexError):
+        showInfo("IPA not found.")
+        return
+    logging.debug(f"IPA transcription string: {ipa}")
 
     # paste IPA transcription of every word in IPA transcription field
     try:
@@ -77,7 +73,6 @@ def paste_ipa(editor: Editor) -> None:
     # update editor
     editor.loadNote()
     editor.web.setFocus()
-    editor.web.eval("focusField(%d);" % editor.currentField)
 
 
 def get_deck_name(main_window: mw) -> str:

@@ -11,8 +11,14 @@ Allows you to insert IPA transcriptions into the spaced-repetition flashcard app
 
 ### Installation
 
-
 The easiest way to install Anki IPA is through [AnkiWeb](https://ankiweb.net/shared/info/799647424).
+
+
+### Testing
+
+Go to the anki-ipa/src/anki_ipa directory and run: 
+
+`python3 -m test_parse_ipa_transcription`
 
 
 ### License and Credits
