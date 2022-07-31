@@ -54,7 +54,7 @@ def german(word):
     if len(transcriptions) == 1:
         return transcriptions[0]
     else:
-        # ignore rhym words
+        # ignore rhyming words
         return transcriptions[1]
 
 
