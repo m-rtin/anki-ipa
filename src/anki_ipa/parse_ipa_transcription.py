@@ -20,12 +20,63 @@ transcription = lambda f: transcription_methods.setdefault(f.__name__, f)
 
 @transcription
 def british(word: str):
-    link = f"https://www.lexico.com/definition/{word}"
-    return ", ".join(parse_website(link, {"class": "phoneticspelling"}))
-
+    payload = {'action': 'parse', 'page': word, 'format': 'json', 'prop': 'wikitext'}
+    r = requests.get('https://en.wiktionary.org/w/api.php', params=payload)
+    try:
+        wikitext = r.json()['parse']['wikitext']['*']
+        p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
+        m = p.search(wikitext)
+        if m is None:
+            p = re.compile("{{a\|RP}} {{IPA\|en\|([^}]+)}}")
+            m = p.search(wikitext)
+        if m is None: 
+            p = re.compile("{{IPA\|en\|([^}]+)}}")
+            m = p.search(wikitext)
+            
+        ipa = m.group(1)
+        return remove_special_chars(word=ipa)
+    except (KeyError, AttributeError):
+        return ""
 
 @transcription
 def american(word: str) -> str:
+    payload = {'action': 'parse', 'page': word, 'format': 'json', 'prop': 'wikitext'}
+    r = requests.get('https://en.wiktionary.org/w/api.php', params=payload)
+    try:
+        wikitext = r.json()['parse']['wikitext']['*']
+        p = re.compile("{{a\|GA}}.*?{{IPA\|en\|([^}]+)}}")
+        m = p.search(wikitext)
+        if m is not None:
+            ipa = m.group(1)
+            return remove_special_chars(word=ipa)
+        p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
+        m = p.search(wikitext)
+        if m is not None:
+            ipa = m.group(2)
+            return remove_special_chars(word=ipa)
+        p = re.compile("{{IPA\|en\|([^}]+)}}")
+        m = p.search(wikitext)
+        ipa = m.group(1)
+        return remove_special_chars(word=ipa)
+    except (KeyError, AttributeError):
+        return ""
+
+@transcription
+def russian(word):
+    link = f"https://ru.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {'class': 'IPA'}))
+
+
+@transcription
+def french(word):
+    link = f"https://fr.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {'title': 'Prononciation API'}))
+
+
+@transcription
+def spanish(word):
+    link = f"https://es.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {'style': 'color:#368BC1'}))
     link = f"https://www.lexico.com/en/definition/{word}"
     return ", ".join(parse_website(link, {"class": "phoneticspelling"}))
 
@@ -89,6 +140,11 @@ def parse_website(link: str, css_code: dict) -> List[str]:
         .replace(".", "")
         .replace("\\", ""), results)
     return sorted(list(set(transcriptions)))
+
+
+def remove_special_chars(word: str) -> str:
+   word = word.replace("/", "").replace("]", "").replace("[", "").replace(".", "").replace("\\", "") 
+   return word
 
 
 def transcript(words: List[str], language: str) -> str:

@@ -17,11 +17,13 @@ class TestParseIpa(unittest.TestCase):
         self.assertEqual(parse_ipa.british("charcoal"), "ˈtʃɑːkəʊl")
         self.assertEqual(parse_ipa.british("dog"), "dɒɡ")
         self.assertEqual(parse_ipa.british("thumb"), "θʌm")
+        self.assertEqual(parse_ipa.british("box"), "bɒks")
 
     def test_american(self):
-        self.assertEqual(parse_ipa.american("charcoal"), "ˈCHärˌkōl, ˈtʃɑrˌkoʊl")
-        self.assertEqual(parse_ipa.american("dog"), "dôɡ, dɔɡ")
-        self.assertEqual(parse_ipa.american("thumb"), "THəm, θəm")
+        self.assertEqual(parse_ipa.american("charcoal"), "ˈt͡ʃɑɹkoʊl")
+        self.assertEqual(parse_ipa.american("dog"), "dɒɡ")
+        self.assertEqual(parse_ipa.american("thumb"), "θʌm")
+        self.assertEqual(parse_ipa.american("box"), "bɑks")
 
     def test_russian(self):
         self.assertEqual(parse_ipa.russian("спасибо"), "spɐˈsʲibə")
