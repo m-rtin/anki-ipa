@@ -27,21 +27,24 @@ class TestParseIpa(unittest.TestCase):
         self.assertEqual(parse_ipa.russian("спасибо"), "spɐˈsʲibə")
 
     def test_french(self):
-        self.assertEqual(parse_ipa.french("occasion"), "ɔ.ka.zjɔ̃")
-        self.assertEqual(parse_ipa.french("rencontre"), "ʁɑ̃.kɔ̃tʁ")
+        self.assertEqual(parse_ipa.french("occasion"), "ɔkazjɔ̃, əˈkeɪʒən")
+        self.assertEqual(parse_ipa.french("rencontre"), "ʁɑ̃kɔ̃tʁ")
 
     def test_spanish(self):
-        self.assertEqual(parse_ipa.spanish("eternidad"), "e.teɾ.niˈðað")
+        self.assertEqual(parse_ipa.spanish("eternidad"), "eteɾniˈðað")
 
     def test_german(self):
         self.assertEqual(parse_ipa.german("Land"), "lant")
+        self.assertEqual(parse_ipa.german("Kind"), "kɪnt")
+        self.assertEqual(parse_ipa.german("spielen"), "ˈʃpiːlən")
+        self.assertEqual(parse_ipa.german("blau"), "blaʊ̯")
 
     def test_polish(self):
         self.assertEqual(parse_ipa.polish("asteroida"), "ˌastɛˈrɔjda")
         self.assertEqual(parse_ipa.polish("mały"), "ˈmawɨ")
 
     def test_dutch(self):
-        self.assertEqual(parse_ipa.dutch("wit"), "ʋɪt")
+        self.assertEqual(parse_ipa.dutch("wit"), "wit, wɪt, ʋɪt")
         self.assertEqual(parse_ipa.dutch("lucht"), "lʏxt")
 
 if __name__ == "__main__":
