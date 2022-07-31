@@ -20,16 +20,24 @@ transcription = lambda f: transcription_methods.setdefault(f.__name__, f)
 
 @transcription
 def british(word):
-    link = f"https://en.wiktionary.org/wiki/{word}"
-    results = parse_wiktionary(link, {'class': 'IPA'})
-    return results[0].getText().replace("/", "").replace("/", "")
+    link = f"https://www.lexico.com/definition/{word}"
+    website = requests.get(link)
+    soup  = bs4.BeautifulSoup(website.text, "html.parser")
+    results = soup.find_all("span", {"class": "phoneticspelling"})
+    ipa_transcriptions = sorted(list(set(map(lambda result: result.getText(), results))))
+    result = ", ".join(ipa_transcriptions).replace("/", "")
+    return result
 
 
 @transcription
-def american(word):
-    link = f"https://en.wiktionary.org/wiki/{word}"
-    results = parse_wiktionary(link, {'class': 'IPA'})
-    return results[1].getText().replace("/", "").replace("/", "")
+def american(word) -> str:
+    link = f"https://www.lexico.com/en/definition/{word}"
+    website = requests.get(link)
+    soup  = bs4.BeautifulSoup(website.text, "html.parser")
+    results = soup.find_all("span", {"class": "phoneticspelling"})
+    ipa_transcriptions = sorted(list(set(map(lambda result: result.getText(), results))))
+    result = ", ".join(ipa_transcriptions).replace("/", "")
+    return result
 
 
 @transcription

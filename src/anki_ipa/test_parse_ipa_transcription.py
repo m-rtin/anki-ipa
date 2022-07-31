@@ -14,10 +14,14 @@ import parse_ipa_transcription as parse_ipa
 class TestParseIpa(unittest.TestCase):
 
     def test_british(self):
-        self.assertEqual(parse_ipa.british("charcoal"), "ˈtʃɑː.kəʊl")
+        self.assertEqual(parse_ipa.british("charcoal"), "ˈtʃɑːkəʊl")
+        self.assertEqual(parse_ipa.british("dog"), "dɒɡ")
+        self.assertEqual(parse_ipa.british("thumb"), "θʌm")
 
     def test_american(self):
-        self.assertEqual(parse_ipa.american("charcoal"), "ˈt͡ʃɑɹ.koʊl")
+        self.assertEqual(parse_ipa.american("charcoal"), "ˈCHärˌkōl, ˈtʃɑrˌkoʊl")
+        self.assertEqual(parse_ipa.american("dog"), "dôɡ, dɔɡ")
+        self.assertEqual(parse_ipa.american("thumb"), "THəm, θəm")
 
     def test_russian(self):
         self.assertEqual(parse_ipa.russian("спасибо"), "spɐˈsʲibə")
