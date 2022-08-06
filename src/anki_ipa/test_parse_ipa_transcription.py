@@ -59,6 +59,8 @@ class TestParseIpa(unittest.TestCase):
         self.assertEqual(parse_ipa.german("spielen"), "ˈʃpiːlən")
         self.assertEqual(parse_ipa.german("treffen"), "ˈtʁɛfn̩")
         self.assertEqual(parse_ipa.german("gelb"), "ɡɛlp")
+        self.assertEqual(parse_ipa.german("Mensch"), "mɛnʃ")
+        self.assertEqual(parse_ipa.german("Hund"), "hʊnt")
 
     def test_polish(self):
         self.assertEqual(parse_ipa.polish("asteroida"), "ˌastɛˈrɔjda")
