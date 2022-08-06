@@ -19,7 +19,7 @@ transcription = lambda f: transcription_methods.setdefault(f.__name__, f)
 
 
 @transcription
-def british(word: str):
+def british(word: str) -> str:
     payload = {'action': 'parse', 'page': word, 'format': 'json', 'prop': 'wikitext'}
     r = requests.get('https://en.wiktionary.org/w/api.php', params=payload)
     try:
@@ -68,43 +68,43 @@ def american(word: str) -> str:
         return ""
 
 @transcription
-def russian(word):
+def russian(word: str) -> str:
     link = f"https://ru.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'class': 'IPA'}))
 
 
 @transcription
-def french(word):
+def french(word: str) -> str:
     link = f"https://fr.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'title': 'Prononciation API'}))
 
 
 @transcription
-def spanish(word):
+def spanish(word: str) -> str:
     link = f"https://es.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'style': 'color:#368BC1'}))
 
 
 @transcription
-def russian(word):
+def russian(word: str) -> str:
     link = f"https://ru.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'class': 'IPA'}))
 
 
 @transcription
-def french(word):
+def french(word: str) -> str:
     link = f"https://fr.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'title': 'Prononciation API'}))
 
 
 @transcription
-def spanish(word):
+def spanish(word: str) -> str:
     link = f"https://es.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'style': 'color:#368BC1'}))
 
 
 @transcription
-def german(word):
+def german(word: str) -> str:
     payload = {'action': 'parse', 'page': word, 'format': 'json', 'prop': 'wikitext'}
     r = requests.get('https://de.wiktionary.org/w/api.php', params=payload)
     try:
@@ -118,14 +118,14 @@ def german(word):
 
 
 @transcription
-def polish(word):
+def polish(word: str) -> str:
     link = f"https://pl.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(
         link, {'title': 'To jest wymowa w zapisie IPA; zobacz hasło IPA w Wikipedii'}))
 
 
 @transcription
-def dutch(word):
+def dutch(word: str) -> str:
     link = f"https://nl.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {"class": "IPAtekst"}))
 
