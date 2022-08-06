@@ -24,8 +24,6 @@ def british(word: str):
     r = requests.get('https://en.wiktionary.org/w/api.php', params=payload)
     try:
         wikitext = r.json()['parse']['wikitext']['*']
-        if word == "regard":
-            print(wikitext)
         p = re.compile("{{a\|UK}} {{IPA\|en\|([^}]+)}}")
         m = p.search(wikitext)
         if m is None:
