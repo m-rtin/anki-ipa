@@ -14,16 +14,29 @@ import parse_ipa_transcription as parse_ipa
 class TestParseIpa(unittest.TestCase):
 
     def test_british(self):
+        # * {{a|RP}} {{IPA|en|/ˈtʃɑː.kəʊl/}}
         self.assertEqual(parse_ipa.british("charcoal"), "ˈtʃɑːkəʊl")
         self.assertEqual(parse_ipa.british("dog"), "dɒɡ")
         self.assertEqual(parse_ipa.british("thumb"), "θʌm")
         self.assertEqual(parse_ipa.british("box"), "bɒks")
+        # * {{a|UK}} {{IPA|en|/bɜːst/}}
+        self.assertEqual(parse_ipa.british("burst"), "bɜːst")
+        self.assertEqual(parse_ipa.british("hill"), "hɪl")
+        # {{a|RP|GA}} {{IPA|en|/bæk/|[bæk]|[bak]|[-k̚]|[-ˀk]}}
+        self.assertEqual(parse_ipa.british("back"), "bæk")
 
     def test_american(self):
+        # * {{a|GA}} {{IPA|en|/ˈt͡ʃɑɹ.koʊl/}}
         self.assertEqual(parse_ipa.american("charcoal"), "ˈt͡ʃɑɹkoʊl")
         self.assertEqual(parse_ipa.american("dog"), "dɒɡ")
         self.assertEqual(parse_ipa.american("thumb"), "θʌm")
         self.assertEqual(parse_ipa.american("box"), "bɑks")
+        # * {{a|US}} {{IPA|en|/bɝst/}}
+        self.assertEqual(parse_ipa.american("burst"), "bɝst")
+        # {{enPR|hĭl}}, {{IPA|en|/hɪl/|[hɪɫ]}}
+        self.assertEqual(parse_ipa.american("hill"), "hɪl")
+        # {{a|RP|GA}} {{IPA|en|/bæk/|[bæk]|[bak]|[-k̚]|[-ˀk]}}
+        self.assertEqual(parse_ipa.american("back"), "bæk")
 
     def test_russian(self):
         self.assertEqual(parse_ipa.russian("спасибо"), "spɐˈsʲibə")

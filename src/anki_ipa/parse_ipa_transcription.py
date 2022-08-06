@@ -24,10 +24,13 @@ def british(word: str):
     r = requests.get('https://en.wiktionary.org/w/api.php', params=payload)
     try:
         wikitext = r.json()['parse']['wikitext']['*']
-        p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
+        p = re.compile("{{a\|UK}} {{IPA\|en\|([^}]+)}}")
         m = p.search(wikitext)
         if m is None:
             p = re.compile("{{a\|RP}} {{IPA\|en\|([^}]+)}}")
+            m = p.search(wikitext)
+        if m is None: 
+            p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
             m = p.search(wikitext)
         if m is None: 
             p = re.compile("{{IPA\|en\|([^}]+)}}")
@@ -44,18 +47,18 @@ def american(word: str) -> str:
     r = requests.get('https://en.wiktionary.org/w/api.php', params=payload)
     try:
         wikitext = r.json()['parse']['wikitext']['*']
-        p = re.compile("{{a\|GA}}.*?{{IPA\|en\|([^}]+)}}")
+        p = re.compile("{{a\|US}} {{IPA\|en\|([^}]+)}}")
         m = p.search(wikitext)
-        if m is not None:
-            ipa = m.group(1)
-            return remove_special_chars(word=ipa)
-        p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
-        m = p.search(wikitext)
-        if m is not None:
-            ipa = m.group(2)
-            return remove_special_chars(word=ipa)
-        p = re.compile("{{IPA\|en\|([^}]+)}}")
-        m = p.search(wikitext)
+        if m is None: 
+            p = re.compile("{{a\|GA}}.*?{{IPA\|en\|([^}]+)}}")
+            m = p.search(wikitext)
+        if m is None:
+            p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
+            m = p.search(wikitext)
+        if m is None:
+            p = re.compile("{{IPA\|en\|([^}]+)}}")
+            m = p.search(wikitext)
+
         ipa = m.group(1)
         return remove_special_chars(word=ipa)
     except (KeyError, AttributeError):
@@ -143,7 +146,7 @@ def parse_website(link: str, css_code: dict) -> List[str]:
 
 
 def remove_special_chars(word: str) -> str:
-   word = word.replace("/", "").replace("]", "").replace("[", "").replace(".", "").replace("\\", "") 
+   word = word.replace("/", "").replace("]", "").replace("[", "").replace(".", "").replace("\\", "").replace(".", "")
    return word
 
 
