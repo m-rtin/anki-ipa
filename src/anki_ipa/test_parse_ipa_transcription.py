@@ -23,7 +23,9 @@ class TestParseIpa(unittest.TestCase):
         self.assertEqual(parse_ipa.british("burst"), "bɜːst")
         self.assertEqual(parse_ipa.british("hill"), "hɪl")
         # {{a|RP|GA}} {{IPA|en|/bæk/|[bæk]|[bak]|[-k̚]|[-ˀk]}}
-        self.assertEqual(parse_ipa.british("back"), "bæk")
+        self.assertEqual(parse_ipa.british("back"), "bæk|bæk|bak|-k̚")
+        # {{a|RP}} {{IPA|en|/ɹɪˈɡɑːd/}}
+        self.assertEqual(parse_ipa.british("regard"), "ɹɪˈɡɑːd")
 
     def test_american(self):
         # * {{a|GA}} {{IPA|en|/ˈt͡ʃɑɹ.koʊl/}}
@@ -36,7 +38,9 @@ class TestParseIpa(unittest.TestCase):
         # {{enPR|hĭl}}, {{IPA|en|/hɪl/|[hɪɫ]}}
         self.assertEqual(parse_ipa.american("hill"), "hɪl")
         # {{a|RP|GA}} {{IPA|en|/bæk/|[bæk]|[bak]|[-k̚]|[-ˀk]}}
-        self.assertEqual(parse_ipa.american("back"), "bæk")
+        self.assertEqual(parse_ipa.american("back"), "bæk|bæk|bak|-k̚")
+        # {{a|GenAm}} {{IPA|en|/ɹɪˈɡɑɹd/}}
+        self.assertEqual(parse_ipa.american("regard"), "ɹɪˈɡɑɹd")
 
     def test_russian(self):
         self.assertEqual(parse_ipa.russian("спасибо"), "spɐˈsʲibə")
