@@ -111,8 +111,16 @@ def on_setup_buttons(buttons: List[str], editor: Editor) -> List[str]:
     :param editor: card editor object
     :return: updated list of buttons
     """
+    shortcut_keys = CONFIG.get("KEYBOARD_SHORTCUT", "Ctrl+Shift+Z")
+
     # add HTML button
-    button = editor.addButton(ICON_PATH, "IPA", paste_ipa)
+    button = editor.addButton(
+        ICON_PATH,
+        "IPA",
+        paste_ipa,
+        keys=shortcut_keys,
+        tip=f"IPA transcription ({shortcut_keys})"
+    )
     buttons.append(button)
 
     # create list of language options
