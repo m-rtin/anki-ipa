@@ -1,4 +1,5 @@
 {
     "WORD_FIELD": "Front",
-    "IPA_FIELD": "IPA"
+    "IPA_FIELD": "IPA",
+    "KEYBOARD_SHORTCUT": "Ctrl+Shift+Z"
 }
