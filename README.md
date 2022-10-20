@@ -16,8 +16,9 @@ The easiest way to install Anki IPA is through [AnkiWeb](https://ankiweb.net/sha
 
 ### Testing
 
-Go to the anki-ipa/src/anki_ipa directory and run: 
+To test the addon in Anki, navigate to Tools/Add-ons and press on the "View Files" button. The addons21 directory should open up in your file explorer. Copy your local `anki-ipa/src/anki_ipa/` folder into this directory and restart Anki. You are now able to test the addon.  
 
+To run the unittests of this project, go to the anki-ipa/src/anki_ipa directory and run: 
 `python3 -m test_parse_ipa_transcription`
 
 
