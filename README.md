@@ -24,7 +24,7 @@ To run the unittests of this project, go to the anki-ipa/src/anki_ipa directory 
 
 ### Contributing 
 
-Languages can be added or improved in the [parse_ipa_transcription.py](https://github.com/m-rtin/anki-ipa/blob/master/src/anki_ipa/parse_ipa_transcription.py) file. The changes should be tested in the [test_parse_ipa_transcription.py](https://github.com/m-rtin/anki-ipa/blob/master/src/anki_ipa/test_parse_ipa_transcription.py) file.
+New languages can be added the [parse_ipa_transcription.py](https://github.com/m-rtin/anki-ipa/blob/master/src/anki_ipa/parse_ipa_transcription.py) file. The changes should be tested in the [test_parse_ipa_transcription.py](https://github.com/m-rtin/anki-ipa/blob/master/src/anki_ipa/test_parse_ipa_transcription.py) file.
 
 ### License and Credits
 
