@@ -68,33 +68,15 @@ def american(word: str) -> str:
         return ""
 
 @transcription
-def russian(word: str) -> str:
-    link = f"https://ru.wiktionary.org/wiki/{word}"
-    return ", ".join(parse_website(link, {'class': 'IPA'}))
-
-
-@transcription
 def french(word: str) -> str:
     link = f"https://fr.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'title': 'Prononciation API'}))
 
 
 @transcription
-def spanish(word: str) -> str:
-    link = f"https://es.wiktionary.org/wiki/{word}"
-    return ", ".join(parse_website(link, {'style': 'color:#368BC1'}))
-
-
-@transcription
 def russian(word: str) -> str:
     link = f"https://ru.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'class': 'IPA'}))
-
-
-@transcription
-def french(word: str) -> str:
-    link = f"https://fr.wiktionary.org/wiki/{word}"
-    return ", ".join(parse_website(link, {'title': 'Prononciation API'}))
 
 
 @transcription

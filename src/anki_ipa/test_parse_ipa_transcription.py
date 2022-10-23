@@ -35,7 +35,7 @@ class TestParseIpa(unittest.TestCase):
         self.assertEqual(parse_ipa.american("thumb"), "θʌm")
         self.assertEqual(parse_ipa.american("box"), "bɑks")
         # * {{a|US}} {{IPA|en|/bɝst/}}
-        self.assertEqual(parse_ipa.american("burst"), "bɝst")
+        self.assertEqual(parse_ipa.american("burst"), "bɚst")
         # {{enPR|hĭl}}, {{IPA|en|/hɪl/|[hɪɫ]}}
         self.assertEqual(parse_ipa.american("hill"), "hɪl|hɪɫ")
         # {{a|RP|GA}} {{IPA|en|/bæk/|[bæk]|[bak]|[-k̚]|[-ˀk]}}
