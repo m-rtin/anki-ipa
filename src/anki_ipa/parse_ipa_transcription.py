@@ -91,13 +91,12 @@ def german(word: str) -> str:
     r = requests.get('https://de.wiktionary.org/w/api.php', params=payload)
     try:
         wikitext = r.json()['parse']['wikitext']['*']
-        p = re.compile("{{IPA}} {{Lautschrift\|([^}]+)")
+        p = re.compile("{{IPA}}.*?{{Lautschrift\|([^}]+)")
         m = p.search(wikitext)
         ipa = m.group(1)
         return ipa
     except (KeyError, AttributeError):
         return ""
-
 
 @transcription
 def polish(word: str) -> str:

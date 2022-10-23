@@ -80,7 +80,8 @@ class TestParseIpa(unittest.TestCase):
         self.assertEqual(parse_ipa.german("Katze"), "ˈkat͡sə")
         self.assertEqual(parse_ipa.german("Buch"), "buːx")
         self.assertEqual(parse_ipa.german("Eintrag"), "ˈaɪ̯nˌtʁaːk")
-
+        # :{{IPA}} ''standardsprachlich (gemeindeutsch):'' {{Lautschrift|ʃpɛːt}}
+        self.assertEqual(parse_ipa.german("spät"), "ʃpɛːt")
 
     def test_polish(self):
         self.assertEqual(parse_ipa.polish("asteroida"), "ˌastɛˈrɔjda")
