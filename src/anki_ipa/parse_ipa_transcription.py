@@ -68,33 +68,15 @@ def american(word: str) -> str:
         return ""
 
 @transcription
-def russian(word: str) -> str:
-    link = f"https://ru.wiktionary.org/wiki/{word}"
-    return ", ".join(parse_website(link, {'class': 'IPA'}))
-
-
-@transcription
 def french(word: str) -> str:
     link = f"https://fr.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'title': 'Prononciation API'}))
 
 
 @transcription
-def spanish(word: str) -> str:
-    link = f"https://es.wiktionary.org/wiki/{word}"
-    return ", ".join(parse_website(link, {'style': 'color:#368BC1'}))
-
-
-@transcription
 def russian(word: str) -> str:
     link = f"https://ru.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {'class': 'IPA'}))
-
-
-@transcription
-def french(word: str) -> str:
-    link = f"https://fr.wiktionary.org/wiki/{word}"
-    return ", ".join(parse_website(link, {'title': 'Prononciation API'}))
 
 
 @transcription
@@ -109,13 +91,12 @@ def german(word: str) -> str:
     r = requests.get('https://de.wiktionary.org/w/api.php', params=payload)
     try:
         wikitext = r.json()['parse']['wikitext']['*']
-        p = re.compile("{{IPA}} {{Lautschrift\|([^}]+)")
+        p = re.compile("{{IPA}}.*?{{Lautschrift\|([^}]+)")
         m = p.search(wikitext)
         ipa = m.group(1)
         return ipa
     except (KeyError, AttributeError):
         return ""
-
 
 @transcription
 def polish(word: str) -> str:
