@@ -30,10 +30,10 @@ def british(word: str) -> str:
             p = re.compile("{{a\|RP}} {{IPA\|en\|([^}]+)}}")
             m = p.search(wikitext)
         if m is None: 
-            p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
+            p = re.compile("{{IPA\|en\|([^}]+)}}")
             m = p.search(wikitext)
         if m is None: 
-            p = re.compile("{{IPA\|en\|([^}]+)}}")
+            p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
             m = p.search(wikitext)
             
         ipa = m.group(1)
@@ -56,10 +56,10 @@ def american(word: str) -> str:
             p = re.compile("{{a\|GenAm}}.*?{{IPA\|en\|([^}]+)}}")
             m = p.search(wikitext)
         if m is None:
-            p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
+            p = re.compile("{{IPA\|en\|([^}]+)}}")
             m = p.search(wikitext)
         if m is None:
-            p = re.compile("{{IPA\|en\|([^}]+)}}")
+            p = re.compile("{{IPA\|en\|([^}]+)\|([^}]+)}}")
             m = p.search(wikitext)
 
         ipa = m.group(1)
