@@ -82,7 +82,7 @@ def russian(word: str, strip_syllable_separator: bool) -> str:
 @transcription
 def spanish(word: str, strip_syllable_separator: bool) -> str:
     link = f"https://es.wiktionary.org/wiki/{word}"
-    return ", ".join(parse_website(link, {'style': 'color:#368BC1'}, strip_syllable_separator))
+    return ", ".join(parse_website(link, {'class': 'ipa'}, strip_syllable_separator))
 
 
 @transcription
@@ -144,5 +144,5 @@ def remove_special_chars(word: str, strip_syllable_separator: bool) -> str:
 
 def transcript(words: List[str], language: str, strip_syllable_separator: bool=True) -> str:
     transcription_method = transcription_methods[language]
-    transcribed_words = [transcription_method(word) for word in words]
+    transcribed_words = [transcription_method(word, strip_syllable_separator) for word in words]
     return " ".join(transcribed_words)
