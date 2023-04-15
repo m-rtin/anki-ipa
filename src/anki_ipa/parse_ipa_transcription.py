@@ -111,6 +111,30 @@ def dutch(word: str, strip_syllable_separator: bool) -> str:
     return ", ".join(parse_website(link, {"class": "IPAtekst"}, strip_syllable_separator))
 
 
+@transcription
+def italian(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://it.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+
+@transcription
+def portuguese(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://pt.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "ipa"}, strip_syllable_separator))
+
+
+@transcription
+def mandarin(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://zh.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+
+@transcription
+def catalan(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://ca.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+
 def parse_website(link: str, css_code: dict, strip_syllable_separator: bool=True) -> List[str]:
     try:
         website = requests.get(link)
@@ -131,7 +155,7 @@ def parse_website(link: str, css_code: dict, strip_syllable_separator: bool=True
             .replace("]", "")
             .replace("[", "")
             .replace("\\", ""), results)
-    _transcriptions = sorted(list(set(transcriptions)))
+    _transcriptions = sorted(list(set(transcriptions))[0])
     return _transcriptions
 
 
