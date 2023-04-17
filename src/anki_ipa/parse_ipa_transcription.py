@@ -110,6 +110,40 @@ def dutch(word: str, strip_syllable_separator: bool) -> str:
     link = f"https://nl.wiktionary.org/wiki/{word}"
     return ", ".join(parse_website(link, {"class": "IPAtekst"}, strip_syllable_separator))
 
+@transcription
+def italian(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://it.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+@transcription
+def portuguese(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://pt.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "ipa"}, strip_syllable_separator))
+
+
+
+
+# @transcription
+# def brazilian_portuguese(word: str, strip_syllable_separator: bool) -> str:
+#     link = f"https://pt.wiktionary.org/wiki/{word}"
+#     return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+@transcription
+def mandarin(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://zh.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+# @transcription
+# def malagasy(word: str, strip_syllable_separator: bool) -> str:
+#     link = f"https://mg.wiktionary.org/wiki/{word}"
+#     return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+@transcription
+def catalan(word: str, strip_syllable_separator: bool) -> str:
+    link = f"https://ca.wiktionary.org/wiki/{word}"
+    return ", ".join(parse_website(link, {"class": "IPA"}, strip_syllable_separator))
+
+
 
 @transcription
 def italian(word: str, strip_syllable_separator: bool) -> str:
