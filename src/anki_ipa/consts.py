@@ -19,9 +19,7 @@ LANGUAGES_MAP = {
     'it': 'italian',
     'pt': 'portuguese',
     'zh': 'chinese',
-    'ca': 'catalan',
-    # 'mg': 'malagasy',
-    # 'ptb': 'portuguese_br',
+    'ca': 'catalan'
 }
 
 
