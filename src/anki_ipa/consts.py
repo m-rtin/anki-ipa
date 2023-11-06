@@ -16,10 +16,6 @@ LANGUAGES_MAP = {
     'ger': 'german',
     'pl': 'polish',
     'nl': 'dutch',
-    'it': 'italian',
-    'pt': 'portuguese',
-    'zh': 'chinese',
-    'ca': 'catalan'
 }
 
 
