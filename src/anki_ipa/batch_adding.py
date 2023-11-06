@@ -101,8 +101,8 @@ class AddIpaTranscriptDialog(qt.QDialog):
         """Get all fields of selected notes."""
         selected_note = self.selected_notes[0]
         mw = self.browser.mw
-        model = mw.col.get_note(selected_note).model()
-        fields = mw.col.models.field_names(model)
+        model = mw.col.getNote(selected_note).model()
+        fields = mw.col.models.fieldNames(model)
         return fields
 
     @qt.pyqtSlot(int)
@@ -143,7 +143,7 @@ class AddIpaTranscriptDialog(qt.QDialog):
     def _create_note_dictionary(self) -> Dict[int, anki.notes.Note]:
         """Map each note id to the corresponding Anki note object."""
         notes = {
-            note: self.browser.mw.col.get_note(note)
+            note: self.browser.mw.col.getNote(note)
             for note in self.selected_notes
         }
         return notes
@@ -160,14 +160,13 @@ class AddIpaTranscriptDialog(qt.QDialog):
         self.browser.model.beginReset()
 
         for note_id, ipa_transcription in result_dict.items():
-            note = mw.col.get_note(note_id)
+            note = mw.col.getNote(note_id)
             target_field = self.field_combobox.currentText()
             note[target_field] = ipa_transcription
             note.flush()
 
         self.browser.model.endReset()
-        # mw.requireReset()
-        mw.CollectionOp()
+        mw.requireReset()
         mw.progress.finish()
         mw.reset()
 

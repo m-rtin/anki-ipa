@@ -20,3 +20,5 @@ def setup_synced_config() -> None:
             "deckdefaultlang": {},  # default addon language for specific decks
             "lang": "eng"
         }
+
+    mw.col.setMod()
