@@ -15,7 +15,11 @@ LANGUAGES_MAP = {
     'es': 'spanish',
     'ger': 'german',
     'pl': 'polish',
-    'nl': 'dutch'
+    'nl': 'dutch',
+    'it': 'italian',
+    'pt': 'portuguese',
+    'zh': 'chinese',
+    'ca': 'catalan'
 }
 
 
