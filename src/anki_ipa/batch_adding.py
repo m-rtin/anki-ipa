@@ -80,8 +80,8 @@ class AddIpaTranscriptDialog(qt.QDialog):
 
     def _setup_buttons(self) -> None:
         """Setup add button."""
-        button_box = qt.QDialogButtonBox(qt.Qt.Horizontal, self)
-        add_button = button_box.addButton("Add", qt.QDialogButtonBox.ActionRole)
+        button_box = qt.QDialogButtonBox(qt.Qt.Orientation.Horizontal, self)
+        add_button = button_box.addButton("Add", qt.QDialogButtonBox.ButtonRole.ActionRole)
 
         self.bottom_hbox = qt.QHBoxLayout()
         self.bottom_hbox.addWidget(button_box)
@@ -166,8 +166,8 @@ class AddIpaTranscriptDialog(qt.QDialog):
             note.flush()
 
         self.browser.model.endReset()
-        # mw.requireReset()
-        mw.CollectionOp()
+        mw.requireReset()
+        # mw.CollectionOp()
         mw.progress.finish()
         mw.reset()
 
@@ -235,7 +235,7 @@ def on_batch_edit(browser: Browser) -> None:
         tooltip("No cards selected.")
         return
     dialog = AddIpaTranscriptDialog(browser, selected_notes)
-    dialog.exec_()
+    dialog.exec()
 
 
 def setup_menu(browser: Browser) -> None:
